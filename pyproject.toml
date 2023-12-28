@@ -4,11 +4,13 @@ version = "0.1.0"
 description = ""
 authors = ["Ilya Nekhay <nekhayiv@gmail.com>"]
 readme = "README.md"
-packages = [{include = "exist_client"}]
+packages = [{include = "exist_client", from = "src"}]
 
 [tool.poetry.dependencies]
 python = "^3.11"
 
+[tool.poetry.group.dev.dependencies]
+pre-commit = "*"
 
 [build-system]
 requires = ["poetry-core"]
