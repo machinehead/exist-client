@@ -1,0 +1,290 @@
+openapi: 3.0.3
+info:
+  title: Exist.io
+  version: "1.0"
+paths:
+  /oauth2/access_token:
+    post:
+      operationId: access-token
+      responses:
+        "200":
+          description: Exchange access code for an access token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tokens'
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              properties:
+                grant_type:
+                  type: string
+                code:
+                  type: string
+                client_id:
+                  type: string
+                client_secret:
+                  type: string
+              required:
+                - grant_type
+                - code
+                - client_id
+                - client_secret
+  /api/2/attributes/acquire/:
+    post:
+      operationId: acquire-attributes
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/AttributeAcquisition'
+      responses:
+        "200":
+          description: Successfully acquired all attributes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AttributeAcquisitionResponse'
+        "202":
+          description: Some attributes failed to be acquired
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AttributeAcquisitionResponse'
+      security:
+        - http: []
+  /api/2/attributes/update/:
+    post:
+      operationId: update-attributes
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/AttributeUpdate'
+      responses:
+        "200":
+          description: Successfully updated all attributes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AttributesUpdateResponse'
+        "202":
+          description: Some attributes failed to be updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AttributesUpdateResponse'
+      security:
+        - http: []
+  /api/2/attributes/:
+    get:
+      operationId: get-attributes
+      parameters:
+        - name: owned
+          in: query
+          schema:
+            type: string
+        - name: include_low_priority
+          in: query
+          schema:
+            type: string
+        - name: include_inactive
+          in: query
+          schema:
+            type: string
+        - name: limit
+          in: query
+          schema:
+            type: integer
+        - name: groups
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successfully retrieved attributes
+          content:
+            application/json:
+              schema:
+                properties:
+                  count:
+                    type: integer
+                  next:
+                    type: string
+                    nullable: true
+                  previous:
+                    type: string
+                    nullable: true
+                  results:
+                    type: array
+                    items:
+                      properties:
+                        template:
+                          type: string
+                          nullable: true
+                        name:
+                          type: string
+                        label:
+                          type: string
+                        group:
+                          type: object
+                          properties:
+                            name:
+                              type: string
+                            label:
+                              type: string
+                          required:
+                            - name
+                            - label
+                        value_type_description:
+                          type: string
+                      required:
+                        - template
+                        - name
+                        - label
+                        - group
+                        - value_type_description
+                required:
+                  - count
+                  - next
+                  - previous
+                  - results
+      security:
+        - http: []
+  /api/2/accounts/profile/:
+    get:
+      operationId: get-profile
+      responses:
+        "200":
+          description: Get user's profile
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfile'
+      security:
+        - http: []
+components:
+  schemas:
+    UserProfile:
+      properties:
+        timezone:
+          type: string
+      required:
+        - timezone
+    AttributeAcquisition:
+      properties:
+        template:
+          type: string
+        name:
+          type: string
+    AttributeAcquisitionResponse:
+      properties:
+        success:
+          type: array
+          items:
+            properties:
+              name:
+                type: string
+            required:
+              - name
+        failed:
+          type: array
+          items:
+            properties:
+              name:
+                type: string
+              template:
+                type: string
+              error:
+                type: string
+              error_code:
+                type: string
+            required:
+              - name
+              - error
+              - error_code
+      required:
+        - success
+        - failed
+    AttributeUpdate:
+      properties:
+        name:
+          type: string
+        date:
+          type: string
+        value:
+          anyOf:
+            - type: string
+            - type: integer
+            - type: number
+      required:
+        - name
+    AttributesUpdateResponse:
+      properties:
+        success:
+          type: array
+          items:
+            properties:
+              name:
+                type: string
+              date:
+                type: string
+              value:
+                anyOf:
+                  - type: string
+                  - type: integer
+                  - type: number
+            required:
+              - name
+              - date
+              - value
+        failed:
+          type: array
+          items:
+            properties:
+              name:
+                type: string
+              date:
+                type: string
+              error:
+                type: string
+              error_code:
+                type: string
+            required:
+              - name
+              - date
+              - error
+              - error_code
+      required:
+        - success
+        - failed
+    Tokens:
+      type: object
+      properties:
+        access_token:
+          type: string
+        token_type:
+          type: string
+        expires_in:
+          type: integer
+        scope:
+          type: string
+        refresh_token:
+          type: string
+      required:
+        - access_token
+        - token_type
+        - expires_in
+        - scope
+        - refresh_token
+  securitySchemes:
+    http:
+      type: http
+      scheme: Bearer
+servers:
+  - url: https://exist.io
