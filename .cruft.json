@@ -1,6 +1,6 @@
 {
   "template": "https://github.com/machinehead/cookiecutter-pylibrary.git",
-  "commit": "9dc1ab2ecf5e7112686d440a96946d2de858264a",
+  "commit": "1101179a9fa40000f4430218f28d46537b91839c",
   "checkout": null,
   "context": {
     "cookiecutter": {
@@ -9,6 +9,7 @@
       "package_name": "exist_client",
       "author_name": "Ilya Nekhay",
       "author_email": "nekhayiv@gmail.com",
+      "min_python_version": "3.10",
       "_template": "https://github.com/machinehead/cookiecutter-pylibrary.git"
     }
   },
