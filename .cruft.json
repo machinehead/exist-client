@@ -1,0 +1,14 @@
+{
+  "template": "https://github.com/machinehead/cookiecutter-pylibrary.git",
+  "commit": "fb9e18f5a84c6e61eba771ac0a30822f2fd8e8b5",
+  "checkout": null,
+  "context": {
+    "cookiecutter": {
+      "project_name": "Exist Client",
+      "project_slug": "exist-client",
+      "package_name": "exist_client",
+      "_template": "https://github.com/machinehead/cookiecutter-pylibrary.git"
+    }
+  },
+  "directory": null
+}

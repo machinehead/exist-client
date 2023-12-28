@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "exist-client"
+version = "0.1.0"
+description = ""
+authors = ["machinehead <nekhayiv@gmail.com>"]
+readme = "README.md"
+packages = [{include = "exist_client"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
