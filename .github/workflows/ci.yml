@@ -47,5 +47,12 @@ jobs:
           path: .venv
           key: venv-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('poetry.lock') }}
 
+      - name: Install dependencies
+        if: steps.cached-venv.outputs.cache-hit != 'true'
+        run: poetry install --no-root
+
+      - name: Run tests
+        run: poetry run pytest
+
       - name: Build package
         run: poetry build

@@ -6,11 +6,21 @@ authors = ["Ilya Nekhay <nekhayiv@gmail.com>"]
 readme = "README.md"
 packages = [{include = "exist_client", from = "src"}]
 
+
+
 [tool.poetry.dependencies]
 python = "^3.10"
 
+
+
 [tool.poetry.group.dev.dependencies]
+# Code management
 pre-commit = "*"
+
+# Testing
+pytest = "*"
+
+
 
 [build-system]
 requires = ["poetry-core"]
