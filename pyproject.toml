@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "Exist Client"
+name = "exist-client"
 version = "0.1.0"
 description = ""
 authors = ["Ilya Nekhay <nekhayiv@gmail.com>"]
@@ -31,6 +31,8 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.pytest.ini_options]
 addopts = "--cov=src --cov-report html --cov-report xml --cov-config=.coveragerc"
+pythonpath = ["src"]
+testpaths = ["tests"]
 
 
 [tool.isort]
