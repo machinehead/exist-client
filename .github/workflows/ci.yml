@@ -17,5 +17,29 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Load cached Poetry installation
+        id: cached-poetry
+        uses: actions/cache@v3
+        with:
+          path: ~/.local  # the path depends on the OS
+          key: poetry-0  # increment to reset cache
+
+      - name: Install Poetry if not cached
+        if: steps.cached-poetry.outputs.cache-hit != 'true'
+        uses: snok/install-poetry@v1
+        with:
+          virtualenvs-in-project: true
+
+      - name: Install poetry-dynamic-versioning
+        if: steps.cached-poetry.outputs.cache-hit != 'true'
+        run: poetry self add "poetry-dynamic-versioning[plugin]"
+
+      - name: Load cached venv
+        id: cached-venv
+        uses: actions/cache@v3
+        with:
+          path: .venv
+          key: venv-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('poetry.lock') }}
+
       - name: Build package
         run: poetry build
