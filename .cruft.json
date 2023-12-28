@@ -1,6 +1,6 @@
 {
   "template": "https://github.com/machinehead/cookiecutter-pylibrary.git",
-  "commit": "42cf7161a3e54312e2510c939a29b4ec258444ed",
+  "commit": "7f2ac4ee594d54a3f8648d5c6965e327d5f8e04c",
   "checkout": null,
   "context": {
     "cookiecutter": {

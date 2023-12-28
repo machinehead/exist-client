@@ -54,5 +54,12 @@ jobs:
       - name: Run tests
         run: poetry run pytest
 
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: true
+          verbose: true
+
       - name: Build package
         run: poetry build

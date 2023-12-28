@@ -7,10 +7,8 @@ readme = "README.md"
 packages = [{include = "exist_client", from = "src"}]
 
 
-
 [tool.poetry.dependencies]
 python = "^3.10"
-
 
 
 [tool.poetry.group.dev.dependencies]
@@ -19,9 +17,13 @@ pre-commit = "*"
 
 # Testing
 pytest = "*"
-
+pytest-cov = "*"
 
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+
+[tool.pytest.ini_options]
+addopts = "--cov=src --cov-report html --cov-report xml --cov-config=.coveragerc"
