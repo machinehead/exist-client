@@ -11,11 +11,14 @@ from ...types import UNSET, Response, Unset
 
 def _get_kwargs(
     *,
-    owned: Union[Unset, None, str] = UNSET,
-    include_low_priority: Union[Unset, None, str] = UNSET,
-    include_inactive: Union[Unset, None, str] = UNSET,
+    owned: Union[Unset, None, bool] = UNSET,
+    include_low_priority: Union[Unset, None, bool] = UNSET,
+    include_inactive: Union[Unset, None, bool] = UNSET,
     limit: Union[Unset, None, int] = UNSET,
     groups: Union[Unset, None, str] = UNSET,
+    attributes: Union[Unset, None, str] = UNSET,
+    manual: Union[Unset, None, bool] = UNSET,
+    page: Union[Unset, None, int] = UNSET,
 ) -> Dict[str, Any]:
     params: Dict[str, Any] = {}
     params["owned"] = owned
@@ -27,6 +30,12 @@ def _get_kwargs(
     params["limit"] = limit
 
     params["groups"] = groups
+
+    params["attributes"] = attributes
+
+    params["manual"] = manual
+
+    params["page"] = page
 
     params = {k: v for k, v in params.items() if v is not UNSET and v is not None}
 
@@ -64,19 +73,25 @@ def _build_response(
 def sync_detailed(
     *,
     client: AuthenticatedClient,
-    owned: Union[Unset, None, str] = UNSET,
-    include_low_priority: Union[Unset, None, str] = UNSET,
-    include_inactive: Union[Unset, None, str] = UNSET,
+    owned: Union[Unset, None, bool] = UNSET,
+    include_low_priority: Union[Unset, None, bool] = UNSET,
+    include_inactive: Union[Unset, None, bool] = UNSET,
     limit: Union[Unset, None, int] = UNSET,
     groups: Union[Unset, None, str] = UNSET,
+    attributes: Union[Unset, None, str] = UNSET,
+    manual: Union[Unset, None, bool] = UNSET,
+    page: Union[Unset, None, int] = UNSET,
 ) -> Response[GetAttributesResponse200]:
     """
     Args:
-        owned (Union[Unset, None, str]):
-        include_low_priority (Union[Unset, None, str]):
-        include_inactive (Union[Unset, None, str]):
+        owned (Union[Unset, None, bool]):
+        include_low_priority (Union[Unset, None, bool]):
+        include_inactive (Union[Unset, None, bool]):
         limit (Union[Unset, None, int]):
         groups (Union[Unset, None, str]):
+        attributes (Union[Unset, None, str]):
+        manual (Union[Unset, None, bool]):
+        page (Union[Unset, None, int]):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -92,6 +107,9 @@ def sync_detailed(
         include_inactive=include_inactive,
         limit=limit,
         groups=groups,
+        attributes=attributes,
+        manual=manual,
+        page=page,
     )
 
     response = client.get_httpx_client().request(
@@ -104,19 +122,25 @@ def sync_detailed(
 def sync(
     *,
     client: AuthenticatedClient,
-    owned: Union[Unset, None, str] = UNSET,
-    include_low_priority: Union[Unset, None, str] = UNSET,
-    include_inactive: Union[Unset, None, str] = UNSET,
+    owned: Union[Unset, None, bool] = UNSET,
+    include_low_priority: Union[Unset, None, bool] = UNSET,
+    include_inactive: Union[Unset, None, bool] = UNSET,
     limit: Union[Unset, None, int] = UNSET,
     groups: Union[Unset, None, str] = UNSET,
+    attributes: Union[Unset, None, str] = UNSET,
+    manual: Union[Unset, None, bool] = UNSET,
+    page: Union[Unset, None, int] = UNSET,
 ) -> Optional[GetAttributesResponse200]:
     """
     Args:
-        owned (Union[Unset, None, str]):
-        include_low_priority (Union[Unset, None, str]):
-        include_inactive (Union[Unset, None, str]):
+        owned (Union[Unset, None, bool]):
+        include_low_priority (Union[Unset, None, bool]):
+        include_inactive (Union[Unset, None, bool]):
         limit (Union[Unset, None, int]):
         groups (Union[Unset, None, str]):
+        attributes (Union[Unset, None, str]):
+        manual (Union[Unset, None, bool]):
+        page (Union[Unset, None, int]):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -133,25 +157,34 @@ def sync(
         include_inactive=include_inactive,
         limit=limit,
         groups=groups,
+        attributes=attributes,
+        manual=manual,
+        page=page,
     ).parsed
 
 
 async def asyncio_detailed(
     *,
     client: AuthenticatedClient,
-    owned: Union[Unset, None, str] = UNSET,
-    include_low_priority: Union[Unset, None, str] = UNSET,
-    include_inactive: Union[Unset, None, str] = UNSET,
+    owned: Union[Unset, None, bool] = UNSET,
+    include_low_priority: Union[Unset, None, bool] = UNSET,
+    include_inactive: Union[Unset, None, bool] = UNSET,
     limit: Union[Unset, None, int] = UNSET,
     groups: Union[Unset, None, str] = UNSET,
+    attributes: Union[Unset, None, str] = UNSET,
+    manual: Union[Unset, None, bool] = UNSET,
+    page: Union[Unset, None, int] = UNSET,
 ) -> Response[GetAttributesResponse200]:
     """
     Args:
-        owned (Union[Unset, None, str]):
-        include_low_priority (Union[Unset, None, str]):
-        include_inactive (Union[Unset, None, str]):
+        owned (Union[Unset, None, bool]):
+        include_low_priority (Union[Unset, None, bool]):
+        include_inactive (Union[Unset, None, bool]):
         limit (Union[Unset, None, int]):
         groups (Union[Unset, None, str]):
+        attributes (Union[Unset, None, str]):
+        manual (Union[Unset, None, bool]):
+        page (Union[Unset, None, int]):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -167,6 +200,9 @@ async def asyncio_detailed(
         include_inactive=include_inactive,
         limit=limit,
         groups=groups,
+        attributes=attributes,
+        manual=manual,
+        page=page,
     )
 
     response = await client.get_async_httpx_client().request(**kwargs)
@@ -177,19 +213,25 @@ async def asyncio_detailed(
 async def asyncio(
     *,
     client: AuthenticatedClient,
-    owned: Union[Unset, None, str] = UNSET,
-    include_low_priority: Union[Unset, None, str] = UNSET,
-    include_inactive: Union[Unset, None, str] = UNSET,
+    owned: Union[Unset, None, bool] = UNSET,
+    include_low_priority: Union[Unset, None, bool] = UNSET,
+    include_inactive: Union[Unset, None, bool] = UNSET,
     limit: Union[Unset, None, int] = UNSET,
     groups: Union[Unset, None, str] = UNSET,
+    attributes: Union[Unset, None, str] = UNSET,
+    manual: Union[Unset, None, bool] = UNSET,
+    page: Union[Unset, None, int] = UNSET,
 ) -> Optional[GetAttributesResponse200]:
     """
     Args:
-        owned (Union[Unset, None, str]):
-        include_low_priority (Union[Unset, None, str]):
-        include_inactive (Union[Unset, None, str]):
+        owned (Union[Unset, None, bool]):
+        include_low_priority (Union[Unset, None, bool]):
+        include_inactive (Union[Unset, None, bool]):
         limit (Union[Unset, None, int]):
         groups (Union[Unset, None, str]):
+        attributes (Union[Unset, None, str]):
+        manual (Union[Unset, None, bool]):
+        page (Union[Unset, None, int]):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -207,5 +249,8 @@ async def asyncio(
             include_inactive=include_inactive,
             limit=limit,
             groups=groups,
+            attributes=attributes,
+            manual=manual,
+            page=page,
         )
     ).parsed

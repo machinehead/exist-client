@@ -1,17 +1,28 @@
 import httpx
 
-from exist_client.exist_io_client.api.default import get_profile
-from exist_client.exist_io_client.client import AuthenticatedClient
-
-EXIST_IO_BASE_URL = "https://exist.io"
+from exist_client import ExistClient
 
 
-def test_client(exist_api_mock):
-    client = AuthenticatedClient(EXIST_IO_BASE_URL, "")
+def test_get_profile(exist_api_mock):
+    client = ExistClient(token="token")
     exist_api_mock.get("/api/2/accounts/profile/").return_value = httpx.Response(
         200,
         json={
             "timezone": "America/Chicago",
         },
     )
-    get_profile.sync_detailed(client=client)
+    client.get_profile()
+
+
+def test_get_attributes(exist_api_mock):
+    client = ExistClient(token="token")
+    exist_api_mock.get("/api/2/attributes/").return_value = httpx.Response(
+        200,
+        json={
+            "count": 0,
+            "results": [],
+            "next": None,
+            "previous": None,
+        },
+    )
+    client.get_attributes()

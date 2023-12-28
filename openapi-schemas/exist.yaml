@@ -88,15 +88,15 @@ paths:
         - name: owned
           in: query
           schema:
-            type: string
+            type: boolean
         - name: include_low_priority
           in: query
           schema:
-            type: string
+            type: boolean
         - name: include_inactive
           in: query
           schema:
-            type: string
+            type: boolean
         - name: limit
           in: query
           schema:
@@ -105,6 +105,18 @@ paths:
           in: query
           schema:
             type: string
+        - name: attributes
+          in: query
+          schema:
+            type: string
+        - name: manual
+          in: query
+          schema:
+            type: boolean
+        - name: page
+          in: query
+          schema:
+            type: integer
       responses:
         "200":
           description: Successfully retrieved attributes
