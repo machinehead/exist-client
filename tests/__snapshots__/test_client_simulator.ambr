@@ -1,0 +1,9 @@
+# serializer version: 1
+# name: test_get_attributes[known-token-expectation0]
+  list([
+    Attribute(name='sleep', label='Time asleep', group=AttributeGroup(name='sleep', label='Sleep', additional_properties={}), value_type_description='Period (min)', template='sleep', additional_properties={}),
+  ])
+# ---
+# name: test_update_attributes[known-token-expectation0]
+  AttributesUpdateResult(success=[AttributeValue(date='2023-12-29', value=57, name='myair_score', additional_properties={})], failed=[], additional_properties={})
+# ---

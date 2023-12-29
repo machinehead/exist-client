@@ -4,27 +4,27 @@ from attrs import define as _attrs_define
 from attrs import field as _attrs_field
 
 if TYPE_CHECKING:
-    from ..models.attribute_acquisition_response_failed_item import (
-        AttributeAcquisitionResponseFailedItem,
+    from ..models.attributes_acquire_result_failed_item import (
+        AttributesAcquireResultFailedItem,
     )
-    from ..models.attribute_acquisition_response_success_item import (
-        AttributeAcquisitionResponseSuccessItem,
+    from ..models.attributes_acquire_result_success_item import (
+        AttributesAcquireResultSuccessItem,
     )
 
 
-T = TypeVar("T", bound="AttributeAcquisitionResponse")
+T = TypeVar("T", bound="AttributesAcquireResult")
 
 
 @_attrs_define
-class AttributeAcquisitionResponse:
+class AttributesAcquireResult:
     """
     Attributes:
-        success (List['AttributeAcquisitionResponseSuccessItem']):
-        failed (List['AttributeAcquisitionResponseFailedItem']):
+        success (List['AttributesAcquireResultSuccessItem']):
+        failed (List['AttributesAcquireResultFailedItem']):
     """
 
-    success: List["AttributeAcquisitionResponseSuccessItem"]
-    failed: List["AttributeAcquisitionResponseFailedItem"]
+    success: List["AttributesAcquireResultSuccessItem"]
+    failed: List["AttributesAcquireResultFailedItem"]
     additional_properties: Dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:
@@ -53,18 +53,18 @@ class AttributeAcquisitionResponse:
 
     @classmethod
     def from_dict(cls: Type[T], src_dict: Dict[str, Any]) -> T:
-        from ..models.attribute_acquisition_response_failed_item import (
-            AttributeAcquisitionResponseFailedItem,
+        from ..models.attributes_acquire_result_failed_item import (
+            AttributesAcquireResultFailedItem,
         )
-        from ..models.attribute_acquisition_response_success_item import (
-            AttributeAcquisitionResponseSuccessItem,
+        from ..models.attributes_acquire_result_success_item import (
+            AttributesAcquireResultSuccessItem,
         )
 
         d = src_dict.copy()
         success = []
         _success = d.pop("success")
         for success_item_data in _success:
-            success_item = AttributeAcquisitionResponseSuccessItem.from_dict(
+            success_item = AttributesAcquireResultSuccessItem.from_dict(
                 success_item_data
             )
 
@@ -73,19 +73,17 @@ class AttributeAcquisitionResponse:
         failed = []
         _failed = d.pop("failed")
         for failed_item_data in _failed:
-            failed_item = AttributeAcquisitionResponseFailedItem.from_dict(
-                failed_item_data
-            )
+            failed_item = AttributesAcquireResultFailedItem.from_dict(failed_item_data)
 
             failed.append(failed_item)
 
-        attribute_acquisition_response = cls(
+        attributes_acquire_result = cls(
             success=success,
             failed=failed,
         )
 
-        attribute_acquisition_response.additional_properties = d
-        return attribute_acquisition_response
+        attributes_acquire_result.additional_properties = d
+        return attributes_acquire_result
 
     @property
     def additional_keys(self) -> List[str]:

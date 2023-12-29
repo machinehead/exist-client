@@ -1,41 +1,40 @@
-from typing import Any, Dict, List, Type, TypeVar
+from typing import Any, Dict, List, Type, TypeVar, Union, cast
 
 from attrs import define as _attrs_define
 from attrs import field as _attrs_field
 
-T = TypeVar("T", bound="AttributesUpdateResponseFailedItem")
+T = TypeVar("T", bound="AttributeValue")
 
 
 @_attrs_define
-class AttributesUpdateResponseFailedItem:
+class AttributeValue:
     """
     Attributes:
-        name (str):
         date (str):
-        error (str):
-        error_code (str):
+        value (Union[float, int, str]):
+        name (str):
     """
 
-    name: str
     date: str
-    error: str
-    error_code: str
+    value: Union[float, int, str]
+    name: str
     additional_properties: Dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:
-        name = self.name
         date = self.date
-        error = self.error
-        error_code = self.error_code
+        value: Union[float, int, str]
+
+        value = self.value
+
+        name = self.name
 
         field_dict: Dict[str, Any] = {}
         field_dict.update(self.additional_properties)
         field_dict.update(
             {
-                "name": name,
                 "date": date,
-                "error": error,
-                "error_code": error_code,
+                "value": value,
+                "name": name,
             }
         )
 
@@ -44,23 +43,23 @@ class AttributesUpdateResponseFailedItem:
     @classmethod
     def from_dict(cls: Type[T], src_dict: Dict[str, Any]) -> T:
         d = src_dict.copy()
-        name = d.pop("name")
-
         date = d.pop("date")
 
-        error = d.pop("error")
+        def _parse_value(data: object) -> Union[float, int, str]:
+            return cast(Union[float, int, str], data)
 
-        error_code = d.pop("error_code")
+        value = _parse_value(d.pop("value"))
 
-        attributes_update_response_failed_item = cls(
-            name=name,
+        name = d.pop("name")
+
+        attribute_value = cls(
             date=date,
-            error=error,
-            error_code=error_code,
+            value=value,
+            name=name,
         )
 
-        attributes_update_response_failed_item.additional_properties = d
-        return attributes_update_response_failed_item
+        attribute_value.additional_properties = d
+        return attribute_value
 
     @property
     def additional_keys(self) -> List[str]:

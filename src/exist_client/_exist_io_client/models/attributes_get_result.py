@@ -4,26 +4,24 @@ from attrs import define as _attrs_define
 from attrs import field as _attrs_field
 
 if TYPE_CHECKING:
-    from ..models.get_attribute_values_response_results_item import (
-        GetAttributeValuesResponseResultsItem,
-    )
+    from ..models.attribute import Attribute
 
 
-T = TypeVar("T", bound="GetAttributeValuesResponse")
+T = TypeVar("T", bound="AttributesGetResult")
 
 
 @_attrs_define
-class GetAttributeValuesResponse:
+class AttributesGetResult:
     """
     Attributes:
         count (int):
-        results (List['GetAttributeValuesResponseResultsItem']):
+        results (List['Attribute']):
         next_ (Optional[str]):
         previous (Optional[str]):
     """
 
     count: int
-    results: List["GetAttributeValuesResponseResultsItem"]
+    results: List["Attribute"]
     next_: Optional[str]
     previous: Optional[str]
     additional_properties: Dict[str, Any] = _attrs_field(init=False, factory=dict)
@@ -54,9 +52,7 @@ class GetAttributeValuesResponse:
 
     @classmethod
     def from_dict(cls: Type[T], src_dict: Dict[str, Any]) -> T:
-        from ..models.get_attribute_values_response_results_item import (
-            GetAttributeValuesResponseResultsItem,
-        )
+        from ..models.attribute import Attribute
 
         d = src_dict.copy()
         count = d.pop("count")
@@ -64,9 +60,7 @@ class GetAttributeValuesResponse:
         results = []
         _results = d.pop("results")
         for results_item_data in _results:
-            results_item = GetAttributeValuesResponseResultsItem.from_dict(
-                results_item_data
-            )
+            results_item = Attribute.from_dict(results_item_data)
 
             results.append(results_item)
 
@@ -74,15 +68,15 @@ class GetAttributeValuesResponse:
 
         previous = d.pop("previous")
 
-        get_attribute_values_response = cls(
+        attributes_get_result = cls(
             count=count,
             results=results,
             next_=next_,
             previous=previous,
         )
 
-        get_attribute_values_response.additional_properties = d
-        return get_attribute_values_response
+        attributes_get_result.additional_properties = d
+        return attributes_get_result
 
     @property
     def additional_keys(self) -> List[str]:

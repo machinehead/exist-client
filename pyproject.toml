@@ -26,6 +26,10 @@ pytest = "*"
 pytest-cov = "*"
 mypy = "*"
 respx = "*"
+flask = "^3.0.0"
+flask-httpauth = "^4.8.0"
+flask-httpauth-stubs = "^0.1.6"
+syrupy = "^4.6.0"
 
 
 [build-system]

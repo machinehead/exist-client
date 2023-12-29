@@ -1,4 +1,4 @@
-openapi: 3.0.3
+openapi: 3.0.0
 info:
   title: Exist.io
   version: "1.0"
@@ -33,57 +33,57 @@ paths:
                 - client_secret
   /api/2/attributes/acquire/:
     post:
-      operationId: acquire-attributes
+      operationId: attributes-acquire
       requestBody:
         content:
           application/json:
             schema:
               type: array
               items:
-                $ref: '#/components/schemas/AttributeAcquisition'
+                $ref: '#/components/schemas/AttributeRef'
       responses:
         "200":
           description: Successfully acquired all attributes
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AttributeAcquisitionResponse'
+                $ref: '#/components/schemas/AttributesAcquireResult'
         "202":
           description: Some attributes failed to be acquired
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AttributeAcquisitionResponse'
+                $ref: '#/components/schemas/AttributesAcquireResult'
       security:
         - http: []
   /api/2/attributes/update/:
     post:
-      operationId: update-attributes
+      operationId: attributes-update
       requestBody:
         content:
           application/json:
             schema:
               type: array
               items:
-                $ref: '#/components/schemas/AttributeUpdate'
+                $ref: '#/components/schemas/AttributeValue'
       responses:
         "200":
           description: Successfully updated all attributes
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AttributesUpdateResponse'
+                $ref: '#/components/schemas/AttributesUpdateResult'
         "202":
           description: Some attributes failed to be updated
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AttributesUpdateResponse'
+                $ref: '#/components/schemas/AttributesUpdateResult'
       security:
         - http: []
   /api/2/attributes/:
     get:
-      operationId: get-attributes
+      operationId: attributes-get
       parameters:
         - name: owned
           in: query
@@ -123,29 +123,12 @@ paths:
           content:
             application/json:
               schema:
-                properties:
-                  count:
-                    type: integer
-                  next:
-                    type: string
-                    nullable: true
-                  previous:
-                    type: string
-                    nullable: true
-                  results:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/Attribute'
-                required:
-                  - count
-                  - next
-                  - previous
-                  - results
+                $ref: '#/components/schemas/AttributesGetResult'
       security:
         - http: []
   /api/2/attributes/values/:
     get:
-      operationId: get-attribute-values
+      operationId: attribute-values-get
       parameters:
         - name: attribute
           in: query
@@ -162,10 +145,10 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GetAttributeValuesResponse'
+                $ref: '#/components/schemas/AttributeValuesGetResult'
   /api/2/accounts/profile/:
     get:
-      operationId: get-profile
+      operationId: accounts-profile
       responses:
         "200":
           description: Get user's profile
@@ -191,6 +174,17 @@ components:
         - count
         - next
         - previous
+    AttributesGetResult:
+      allOf:
+        - $ref: '#/components/schemas/PaginatedResponse'
+        - type: object
+          properties:
+            results:
+              type: array
+              items:
+                $ref: '#/components/schemas/Attribute'
+          required:
+            - results
     Attribute:
       properties:
         template:
@@ -218,57 +212,8 @@ components:
         - label
         - group
         - value_type_description
-    UserProfile:
+    DateValue:
       properties:
-        timezone:
-          type: string
-      required:
-        - timezone
-    AttributeAcquisition:
-      oneOf:
-        - properties:
-            template:
-              type: string
-          required:
-            - template
-        - properties:
-            name:
-              type: string
-          required:
-            - name
-    AttributeAcquisitionResponse:
-      properties:
-        success:
-          type: array
-          items:
-            properties:
-              name:
-                type: string
-            required:
-              - name
-        failed:
-          type: array
-          items:
-            properties:
-              name:
-                type: string
-              template:
-                type: string
-              error:
-                type: string
-              error_code:
-                type: string
-            required:
-              - name
-              - error
-              - error_code
-      required:
-        - success
-        - failed
-    AttributeUpdate:
-      properties:
-        name:
-          type: string
         date:
           type: string
         value:
@@ -277,8 +222,48 @@ components:
             - type: integer
             - type: number
       required:
+        - date
+        - value
+    AttributeValue:
+      allOf:
+        - $ref: '#/components/schemas/DateValue'
+        - properties:
+            name:
+              type: string
+          required:
+            - name
+    UserProfile:
+      properties:
+        timezone:
+          type: string
+      required:
+        - timezone
+    AttributeRef:
+      oneOf:
+        - $ref: '#/components/schemas/AttributeByTemplate'
+        - $ref: '#/components/schemas/AttributeByName'
+    AttributeByTemplate:
+      properties:
+        template:
+          type: string
+      required:
+        - template
+    AttributeByName:
+      properties:
+        name:
+          type: string
+      required:
         - name
-    AttributesUpdateResponse:
+    ErrorCode:
+      properties:
+        error:
+          type: string
+        error_code:
+          type: string
+      required:
+        - error
+        - error_code
+    AttributesAcquireResult:
       properties:
         success:
           type: array
@@ -286,36 +271,31 @@ components:
             properties:
               name:
                 type: string
-              date:
-                type: string
-              value:
-                anyOf:
-                  - type: string
-                  - type: integer
-                  - type: number
             required:
               - name
-              - date
-              - value
         failed:
           type: array
           items:
-            properties:
-              name:
-                type: string
-              date:
-                type: string
-              error:
-                type: string
-              error_code:
-                type: string
-              value:
-                type: integer
-            required:
-              - name
-              - date
-              - error
-              - error_code
+            allOf:
+              - $ref: '#/components/schemas/ErrorCode'
+              - oneOf:
+                  - $ref: '#/components/schemas/AttributeByTemplate'
+                  - $ref: '#/components/schemas/AttributeByName'
+      required:
+        - success
+        - failed
+    AttributesUpdateResult:
+      properties:
+        success:
+          type: array
+          items:
+            $ref: '#/components/schemas/AttributeValue'
+        failed:
+          type: array
+          items:
+            allOf:
+              - $ref: '#/components/schemas/ErrorCode'
+              - $ref: '#/components/schemas/AttributeValue'
       required:
         - success
         - failed
@@ -338,24 +318,14 @@ components:
         - expires_in
         - scope
         - refresh_token
-    GetAttributeValuesResponse:
+    AttributeValuesGetResult:
       allOf:
         - $ref: '#/components/schemas/PaginatedResponse'
         - properties:
             results:
               type: array
               items:
-                properties:
-                  date:
-                    type: string
-                  value:
-                    anyOf:
-                      - type: string
-                      - type: integer
-                      - type: number
-                required:
-                  - date
-                  - value
+                $ref: '#/components/schemas/DateValue'
           required:
             - results
   securitySchemes:
