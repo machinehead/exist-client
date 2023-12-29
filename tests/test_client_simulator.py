@@ -16,6 +16,7 @@ from exist_client._exist_io_client.models import (
     AttributeGroup,
     AttributesGetResult,
     AttributesUpdateResult,
+    AttributesUpdateResultFailedItem,
     AttributeValue,
 )
 from exist_client.client import EXIST_IO_BASE_URL
@@ -24,6 +25,7 @@ INVALID_TOKEN_RESPONSE_CONTENT = b'{"detail": "Invalid token"}'
 
 _T = TypeVar("_T")
 
+# TODO: support status 401
 TOKEN_EXPECTATION_PARAMS = (
     "token,expectation",
     [
@@ -65,6 +67,7 @@ def test_update_attributes(
             client.update_attributes(
                 updates=[
                     AttributeValue(name="myair_score", date="2023-12-29", value=57),
+                    AttributeValue(name="nonexistent", date="2023-12-29", value=480),
                 ]
             )
             == snapshot
@@ -90,18 +93,29 @@ def exist_api_simulator() -> Generator[MockRouter, None, None]:
     # "service":{"name":"garmin","label":"Garmin"},"active":true,"priority":1,"manual":false,"value_type":3,
     # "value_type_description":"Period (min)","available_services":[{"name":"garmin","label":"Garmin"}]}
 
+    sleep_group = AttributeGroup(
+        name="sleep",
+        label="Sleep",
+    )
+
     attributes: list[Attribute] = [
         Attribute(
             name="sleep",
             label="Time asleep",
-            group=AttributeGroup(
-                name="sleep",
-                label="Sleep",
-            ),
+            group=sleep_group,
             value_type_description="Period (min)",
             template="sleep",
         ),
+        Attribute(
+            name="myair_score",
+            label="myAir score",
+            group=sleep_group,
+            value_type_description="Percentage",
+            template=None,
+        ),
     ]
+
+    attribute_owned = {attr.name: False for attr in attributes}
 
     @app.get("/api/2/attributes/")
     @auth.login_required
@@ -118,11 +132,32 @@ def exist_api_simulator() -> Generator[MockRouter, None, None]:
     @app.post("/api/2/attributes/update/")
     @auth.login_required
     def update_attributes() -> dict[str, Any]:
-        # TODO: check ownership
         request_json = request.json
         assert request_json is not None
-        input_values = [AttributeValue.from_dict(value) for value in request_json]
-        return AttributesUpdateResult(success=input_values, failed=[]).to_dict()
+        success = []
+        failed = []
+        for item in request_json:
+            value = AttributeValue.from_dict(item)
+            owned = attribute_owned.get(value.name)
+            if owned is None:
+                failed.append(
+                    AttributesUpdateResultFailedItem(
+                        error=f"User doesn't have an attribute named '{value.name}'",
+                        error_code="not_found",
+                        **value.to_dict(),
+                    )
+                )
+            elif not owned:
+                failed.append(
+                    AttributesUpdateResultFailedItem(
+                        error=f"Attribute '{value.name}' does not belong to this service",
+                        error_code="unauthorised",
+                        **value.to_dict(),
+                    )
+                )
+            else:
+                success.append(value)
+        return AttributesUpdateResult(success=success, failed=failed).to_dict()
 
     with respx.mock(base_url=EXIST_IO_BASE_URL) as respx_mock:
         respx_mock.route().mock(side_effect=WSGIHandler(app))
