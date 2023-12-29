@@ -1,6 +1,8 @@
 import itertools
 from typing import Any, Callable, Iterable, Optional, Protocol, TypeVar
 
+from loguru import logger
+
 from ._exist_io_client import AuthenticatedClient
 from ._exist_io_client.api.default import (
     acquire_attributes,
@@ -9,6 +11,7 @@ from ._exist_io_client.api.default import (
     get_profile,
     update_attributes,
 )
+from ._exist_io_client.errors import UnexpectedStatus
 
 # TODO: move to .models
 from ._exist_io_client.models import (
@@ -64,7 +67,7 @@ class ExistClient:
         attributes: Optional[list[str]] = None,
         groups: Optional[list[str]] = None,
         manual: Optional[bool] = None,
-        owned: Optional[bool] = None
+        owned: Optional[bool] = None,
     ) -> list[Attribute]:
         return list(
             self._paginate(
@@ -84,11 +87,18 @@ class ExistClient:
     def acquire_attributes(
         self,
         *,
-        acquisitions: list[AttributeAcquisitionType0 | AttributeAcquisitionType1]
+        acquisitions: list[AttributeAcquisitionType0 | AttributeAcquisitionType1],
     ) -> Optional[AttributeAcquisitionResponse]:
         return acquire_attributes.sync(client=self.client, json_body=acquisitions)
 
     def update_attributes(
         self, *, updates: list[AttributeUpdate]
     ) -> Optional[AttributesUpdateResponse]:
-        return update_attributes.sync(client=self.client, json_body=updates)
+        try:
+            return update_attributes.sync(client=self.client, json_body=updates)
+        except UnexpectedStatus as e:
+            # TODO: put this into a template for generated code?
+            logger.error(
+                f"Got unexpected status code: {e.status_code}, response content: {e.content}"
+            )
+            raise
