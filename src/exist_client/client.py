@@ -99,6 +99,6 @@ class ExistClient:
         except UnexpectedStatus as e:
             # TODO: put this into a template for generated code?
             logger.error(
-                f"Got unexpected status code: {e.status_code}, response content: {e.content}"
+                f"Got unexpected status code: {e.status_code}, response content: {e.content.decode()}"
             )
             raise

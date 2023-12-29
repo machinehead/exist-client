@@ -1,11 +1,12 @@
 import httpx
+from respx import MockRouter
 
 from exist_client import ExistClient
 from exist_client._exist_io_client.models import AttributeAcquisitionType1
 from exist_client.models import AttributeUpdate
 
 
-def test_get_profile(exist_api_mock):
+def test_get_profile(exist_api_mock: MockRouter) -> None:
     client = ExistClient(token="token")
     exist_api_mock.get("/api/2/accounts/profile/").return_value = httpx.Response(
         200,
@@ -16,7 +17,7 @@ def test_get_profile(exist_api_mock):
     client.get_profile()
 
 
-def test_get_attributes(exist_api_mock):
+def test_get_attributes(exist_api_mock: MockRouter) -> None:
     client = ExistClient(token="token")
     exist_api_mock.get("/api/2/attributes/").return_value = httpx.Response(
         200,
@@ -38,7 +39,7 @@ def test_get_attributes(exist_api_mock):
     client.get_attributes()
 
 
-def test_get_attribute_values(exist_api_mock):
+def test_get_attribute_values(exist_api_mock: MockRouter) -> None:
     client = ExistClient(token="token")
     exist_api_mock.get("/api/2/attributes/values/").return_value = httpx.Response(
         200,
@@ -52,7 +53,7 @@ def test_get_attribute_values(exist_api_mock):
     client.get_attribute_values(attribute="attribute")
 
 
-def test_acquire_attributes(exist_api_mock):
+def test_acquire_attributes(exist_api_mock: MockRouter) -> None:
     client = ExistClient(token="token")
     exist_api_mock.post("/api/2/attributes/acquire/").return_value = httpx.Response(
         200,
@@ -71,7 +72,7 @@ def test_acquire_attributes(exist_api_mock):
     client.acquire_attributes(acquisitions=[AttributeAcquisitionType1(name="steps")])
 
 
-def test_update_attributes(exist_api_mock):
+def test_update_attributes(exist_api_mock: MockRouter) -> None:
     client = ExistClient(token="token")
     exist_api_mock.post("/api/2/attributes/update/").return_value = httpx.Response(
         200,
