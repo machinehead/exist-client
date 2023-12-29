@@ -4,24 +4,24 @@ from attrs import define as _attrs_define
 from attrs import field as _attrs_field
 
 if TYPE_CHECKING:
-    from ..models.attribute import Attribute
+    from ..models.date_value import DateValue
 
 
-T = TypeVar("T", bound="GetAttributesResponse200")
+T = TypeVar("T", bound="AttributeValuesGetResult")
 
 
 @_attrs_define
-class GetAttributesResponse200:
+class AttributeValuesGetResult:
     """
     Attributes:
         count (int):
-        results (List['Attribute']):
+        results (List['DateValue']):
         next_ (Optional[str]):
         previous (Optional[str]):
     """
 
     count: int
-    results: List["Attribute"]
+    results: List["DateValue"]
     next_: Optional[str]
     previous: Optional[str]
     additional_properties: Dict[str, Any] = _attrs_field(init=False, factory=dict)
@@ -52,7 +52,7 @@ class GetAttributesResponse200:
 
     @classmethod
     def from_dict(cls: Type[T], src_dict: Dict[str, Any]) -> T:
-        from ..models.attribute import Attribute
+        from ..models.date_value import DateValue
 
         d = src_dict.copy()
         count = d.pop("count")
@@ -60,7 +60,7 @@ class GetAttributesResponse200:
         results = []
         _results = d.pop("results")
         for results_item_data in _results:
-            results_item = Attribute.from_dict(results_item_data)
+            results_item = DateValue.from_dict(results_item_data)
 
             results.append(results_item)
 
@@ -68,15 +68,15 @@ class GetAttributesResponse200:
 
         previous = d.pop("previous")
 
-        get_attributes_response_200 = cls(
+        attribute_values_get_result = cls(
             count=count,
             results=results,
             next_=next_,
             previous=previous,
         )
 
-        get_attributes_response_200.additional_properties = d
-        return get_attributes_response_200
+        attribute_values_get_result.additional_properties = d
+        return attribute_values_get_result
 
     @property
     def additional_keys(self) -> List[str]:

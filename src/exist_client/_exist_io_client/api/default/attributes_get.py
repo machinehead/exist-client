@@ -5,7 +5,7 @@ import httpx
 
 from ... import errors
 from ...client import AuthenticatedClient, Client
-from ...models.get_attributes_response_200 import GetAttributesResponse200
+from ...models.attributes_get_result import AttributesGetResult
 from ...types import UNSET, Response, Unset
 
 
@@ -48,9 +48,9 @@ def _get_kwargs(
 
 def _parse_response(
     *, client: Union[AuthenticatedClient, Client], response: httpx.Response
-) -> Optional[GetAttributesResponse200]:
+) -> Optional[AttributesGetResult]:
     if response.status_code == HTTPStatus.OK:
-        response_200 = GetAttributesResponse200.from_dict(response.json())
+        response_200 = AttributesGetResult.from_dict(response.json())
 
         return response_200
     if client.raise_on_unexpected_status:
@@ -61,7 +61,7 @@ def _parse_response(
 
 def _build_response(
     *, client: Union[AuthenticatedClient, Client], response: httpx.Response
-) -> Response[GetAttributesResponse200]:
+) -> Response[AttributesGetResult]:
     return Response(
         status_code=HTTPStatus(response.status_code),
         content=response.content,
@@ -81,7 +81,7 @@ def sync_detailed(
     attributes: Union[Unset, None, str] = UNSET,
     manual: Union[Unset, None, bool] = UNSET,
     page: Union[Unset, None, int] = UNSET,
-) -> Response[GetAttributesResponse200]:
+) -> Response[AttributesGetResult]:
     """
     Args:
         owned (Union[Unset, None, bool]):
@@ -98,7 +98,7 @@ def sync_detailed(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[GetAttributesResponse200]
+        Response[AttributesGetResult]
     """
 
     kwargs = _get_kwargs(
@@ -130,7 +130,7 @@ def sync(
     attributes: Union[Unset, None, str] = UNSET,
     manual: Union[Unset, None, bool] = UNSET,
     page: Union[Unset, None, int] = UNSET,
-) -> Optional[GetAttributesResponse200]:
+) -> Optional[AttributesGetResult]:
     """
     Args:
         owned (Union[Unset, None, bool]):
@@ -147,7 +147,7 @@ def sync(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        GetAttributesResponse200
+        AttributesGetResult
     """
 
     return sync_detailed(
@@ -174,7 +174,7 @@ async def asyncio_detailed(
     attributes: Union[Unset, None, str] = UNSET,
     manual: Union[Unset, None, bool] = UNSET,
     page: Union[Unset, None, int] = UNSET,
-) -> Response[GetAttributesResponse200]:
+) -> Response[AttributesGetResult]:
     """
     Args:
         owned (Union[Unset, None, bool]):
@@ -191,7 +191,7 @@ async def asyncio_detailed(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[GetAttributesResponse200]
+        Response[AttributesGetResult]
     """
 
     kwargs = _get_kwargs(
@@ -221,7 +221,7 @@ async def asyncio(
     attributes: Union[Unset, None, str] = UNSET,
     manual: Union[Unset, None, bool] = UNSET,
     page: Union[Unset, None, int] = UNSET,
-) -> Optional[GetAttributesResponse200]:
+) -> Optional[AttributesGetResult]:
     """
     Args:
         owned (Union[Unset, None, bool]):
@@ -238,7 +238,7 @@ async def asyncio(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        GetAttributesResponse200
+        AttributesGetResult
     """
 
     return (

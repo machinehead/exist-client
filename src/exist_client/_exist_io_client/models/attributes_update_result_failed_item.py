@@ -3,71 +3,77 @@ from typing import Any, Dict, List, Type, TypeVar, Union, cast
 from attrs import define as _attrs_define
 from attrs import field as _attrs_field
 
-from ..types import UNSET, Unset
-
-T = TypeVar("T", bound="AttributeUpdate")
+T = TypeVar("T", bound="AttributesUpdateResultFailedItem")
 
 
 @_attrs_define
-class AttributeUpdate:
+class AttributesUpdateResultFailedItem:
     """
     Attributes:
+        error (str):
+        error_code (str):
+        date (str):
+        value (Union[float, int, str]):
         name (str):
-        date (Union[Unset, str]):
-        value (Union[Unset, float, int, str]):
     """
 
+    error: str
+    error_code: str
+    date: str
+    value: Union[float, int, str]
     name: str
-    date: Union[Unset, str] = UNSET
-    value: Union[Unset, float, int, str] = UNSET
     additional_properties: Dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:
-        name = self.name
+        error = self.error
+        error_code = self.error_code
         date = self.date
-        value: Union[Unset, float, int, str]
-        if isinstance(self.value, Unset):
-            value = UNSET
+        value: Union[float, int, str]
 
-        else:
-            value = self.value
+        value = self.value
+
+        name = self.name
 
         field_dict: Dict[str, Any] = {}
         field_dict.update(self.additional_properties)
         field_dict.update(
             {
+                "error": error,
+                "error_code": error_code,
+                "date": date,
+                "value": value,
                 "name": name,
             }
         )
-        if date is not UNSET:
-            field_dict["date"] = date
-        if value is not UNSET:
-            field_dict["value"] = value
 
         return field_dict
 
     @classmethod
     def from_dict(cls: Type[T], src_dict: Dict[str, Any]) -> T:
         d = src_dict.copy()
+        error = d.pop("error")
+
+        error_code = d.pop("error_code")
+
+        date = d.pop("date")
+
+        def _parse_value(data: object) -> Union[float, int, str]:
+            return cast(Union[float, int, str], data)
+
+        value = _parse_value(d.pop("value"))
+
         name = d.pop("name")
 
-        date = d.pop("date", UNSET)
-
-        def _parse_value(data: object) -> Union[Unset, float, int, str]:
-            if isinstance(data, Unset):
-                return data
-            return cast(Union[Unset, float, int, str], data)
-
-        value = _parse_value(d.pop("value", UNSET))
-
-        attribute_update = cls(
-            name=name,
+        attributes_update_result_failed_item = cls(
+            error=error,
+            error_code=error_code,
             date=date,
             value=value,
+            name=name,
         )
 
-        attribute_update.additional_properties = d
-        return attribute_update
+        attributes_update_result_failed_item.additional_properties = d
+        return attributes_update_result_failed_item
 
     @property
     def additional_keys(self) -> List[str]:

@@ -2,8 +2,8 @@ import httpx
 from respx import MockRouter
 
 from exist_client import ExistClient
-from exist_client._exist_io_client.models import AttributeAcquisitionType1
-from exist_client.models import AttributeUpdate
+from exist_client._exist_io_client.models import AttributeByName
+from exist_client.models import AttributeValue
 
 
 def test_get_profile(exist_api_mock: MockRouter) -> None:
@@ -69,7 +69,7 @@ def test_acquire_attributes(exist_api_mock: MockRouter) -> None:
             ],
         },
     )
-    client.acquire_attributes(acquisitions=[AttributeAcquisitionType1(name="steps")])
+    client.acquire_attributes(acquisitions=[AttributeByName(name="steps")])
 
 
 def test_update_attributes(exist_api_mock: MockRouter) -> None:
@@ -96,5 +96,5 @@ def test_update_attributes(exist_api_mock: MockRouter) -> None:
         },
     )
     client.update_attributes(
-        updates=[AttributeUpdate(name="attr", date="2023-12-29", value=50)]
+        updates=[AttributeValue(name="attr", date="2023-12-29", value=50)]
     )

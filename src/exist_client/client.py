@@ -1,28 +1,25 @@
 import itertools
 from typing import Any, Callable, Iterable, Optional, Protocol, TypeVar
 
-from loguru import logger
-
 from ._exist_io_client import AuthenticatedClient
 from ._exist_io_client.api.default import (
-    acquire_attributes,
-    get_attribute_values,
-    get_attributes,
-    get_profile,
-    update_attributes,
+    accounts_profile,
+    attribute_values_get,
+    attributes_acquire,
+    attributes_get,
+    attributes_update,
 )
-from ._exist_io_client.errors import UnexpectedStatus
 
 # TODO: move to .models
 from ._exist_io_client.models import (
-    AttributeAcquisitionResponse,
-    AttributeAcquisitionType0,
-    AttributeAcquisitionType1,
-    AttributesUpdateResponse,
-    GetAttributeValuesResponseResultsItem,
+    AttributeByName,
+    AttributeByTemplate,
+    AttributesAcquireResult,
+    AttributesUpdateResult,
+    DateValue,
     UserProfile,
 )
-from .models import Attribute, AttributeUpdate
+from .models import Attribute, AttributeValue
 
 EXIST_IO_BASE_URL = "https://exist.io"
 
@@ -47,7 +44,7 @@ class ExistClient:
         )
 
     def get_profile(self) -> Optional[UserProfile]:
-        return get_profile.sync(client=self.client)
+        return accounts_profile.sync(client=self.client)
 
     def _paginate(self, api: PaginatedApi[T], **kwargs: Any) -> Iterable[T]:
         for page in itertools.count(start=1):
@@ -71,7 +68,7 @@ class ExistClient:
     ) -> list[Attribute]:
         return list(
             self._paginate(
-                get_attributes.sync,
+                attributes_get.sync,
                 attributes=",".join(attributes) if attributes is not None else None,
                 groups=",".join(groups) if groups is not None else None,
                 manual=manual,
@@ -79,26 +76,17 @@ class ExistClient:
             )
         )
 
-    def get_attribute_values(
-        self, *, attribute: str
-    ) -> list[GetAttributeValuesResponseResultsItem]:
-        return list(self._paginate(get_attribute_values.sync, attribute=attribute))
+    def get_attribute_values(self, *, attribute: str) -> list[DateValue]:
+        return list(self._paginate(attribute_values_get.sync, attribute=attribute))
 
     def acquire_attributes(
         self,
         *,
-        acquisitions: list[AttributeAcquisitionType0 | AttributeAcquisitionType1],
-    ) -> Optional[AttributeAcquisitionResponse]:
-        return acquire_attributes.sync(client=self.client, json_body=acquisitions)
+        acquisitions: list[AttributeByName | AttributeByTemplate],
+    ) -> Optional[AttributesAcquireResult]:
+        return attributes_acquire.sync(client=self.client, json_body=acquisitions)
 
     def update_attributes(
-        self, *, updates: list[AttributeUpdate]
-    ) -> Optional[AttributesUpdateResponse]:
-        try:
-            return update_attributes.sync(client=self.client, json_body=updates)
-        except UnexpectedStatus as e:
-            # TODO: put this into a template for generated code?
-            logger.error(
-                f"Got unexpected status code: {e.status_code}, response content: {e.content.decode()}"
-            )
-            raise
+        self, *, updates: list[AttributeValue]
+    ) -> Optional[AttributesUpdateResult]:
+        return attributes_update.sync(client=self.client, json_body=updates)

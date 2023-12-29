@@ -1,43 +1,40 @@
 from http import HTTPStatus
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Dict, Optional, Union
 
 import httpx
 
 from ... import errors
 from ...client import AuthenticatedClient, Client
-from ...models.attribute_update import AttributeUpdate
-from ...models.attributes_update_response import AttributesUpdateResponse
-from ...types import Response
+from ...models.attribute_values_get_result import AttributeValuesGetResult
+from ...types import UNSET, Response, Unset
 
 
 def _get_kwargs(
     *,
-    json_body: List["AttributeUpdate"],
+    attribute: str,
+    page: Union[Unset, None, int] = UNSET,
 ) -> Dict[str, Any]:
-    json_json_body = []
-    for json_body_item_data in json_body:
-        json_body_item = json_body_item_data.to_dict()
+    params: Dict[str, Any] = {}
+    params["attribute"] = attribute
 
-        json_json_body.append(json_body_item)
+    params["page"] = page
+
+    params = {k: v for k, v in params.items() if v is not UNSET and v is not None}
 
     return {
-        "method": "post",
-        "url": "/api/2/attributes/update/",
-        "json": json_json_body,
+        "method": "get",
+        "url": "/api/2/attributes/values/",
+        "params": params,
     }
 
 
 def _parse_response(
     *, client: Union[AuthenticatedClient, Client], response: httpx.Response
-) -> Optional[AttributesUpdateResponse]:
+) -> Optional[AttributeValuesGetResult]:
     if response.status_code == HTTPStatus.OK:
-        response_200 = AttributesUpdateResponse.from_dict(response.json())
+        response_200 = AttributeValuesGetResult.from_dict(response.json())
 
         return response_200
-    if response.status_code == HTTPStatus.ACCEPTED:
-        response_202 = AttributesUpdateResponse.from_dict(response.json())
-
-        return response_202
     if client.raise_on_unexpected_status:
         raise errors.UnexpectedStatus(response.status_code, response.content)
     else:
@@ -46,7 +43,7 @@ def _parse_response(
 
 def _build_response(
     *, client: Union[AuthenticatedClient, Client], response: httpx.Response
-) -> Response[AttributesUpdateResponse]:
+) -> Response[AttributeValuesGetResult]:
     return Response(
         status_code=HTTPStatus(response.status_code),
         content=response.content,
@@ -57,23 +54,26 @@ def _build_response(
 
 def sync_detailed(
     *,
-    client: AuthenticatedClient,
-    json_body: List["AttributeUpdate"],
-) -> Response[AttributesUpdateResponse]:
+    client: Union[AuthenticatedClient, Client],
+    attribute: str,
+    page: Union[Unset, None, int] = UNSET,
+) -> Response[AttributeValuesGetResult]:
     """
     Args:
-        json_body (List['AttributeUpdate']):
+        attribute (str):
+        page (Union[Unset, None, int]):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[AttributesUpdateResponse]
+        Response[AttributeValuesGetResult]
     """
 
     kwargs = _get_kwargs(
-        json_body=json_body,
+        attribute=attribute,
+        page=page,
     )
 
     response = client.get_httpx_client().request(
@@ -85,46 +85,52 @@ def sync_detailed(
 
 def sync(
     *,
-    client: AuthenticatedClient,
-    json_body: List["AttributeUpdate"],
-) -> Optional[AttributesUpdateResponse]:
+    client: Union[AuthenticatedClient, Client],
+    attribute: str,
+    page: Union[Unset, None, int] = UNSET,
+) -> Optional[AttributeValuesGetResult]:
     """
     Args:
-        json_body (List['AttributeUpdate']):
+        attribute (str):
+        page (Union[Unset, None, int]):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        AttributesUpdateResponse
+        AttributeValuesGetResult
     """
 
     return sync_detailed(
         client=client,
-        json_body=json_body,
+        attribute=attribute,
+        page=page,
     ).parsed
 
 
 async def asyncio_detailed(
     *,
-    client: AuthenticatedClient,
-    json_body: List["AttributeUpdate"],
-) -> Response[AttributesUpdateResponse]:
+    client: Union[AuthenticatedClient, Client],
+    attribute: str,
+    page: Union[Unset, None, int] = UNSET,
+) -> Response[AttributeValuesGetResult]:
     """
     Args:
-        json_body (List['AttributeUpdate']):
+        attribute (str):
+        page (Union[Unset, None, int]):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[AttributesUpdateResponse]
+        Response[AttributeValuesGetResult]
     """
 
     kwargs = _get_kwargs(
-        json_body=json_body,
+        attribute=attribute,
+        page=page,
     )
 
     response = await client.get_async_httpx_client().request(**kwargs)
@@ -134,24 +140,27 @@ async def asyncio_detailed(
 
 async def asyncio(
     *,
-    client: AuthenticatedClient,
-    json_body: List["AttributeUpdate"],
-) -> Optional[AttributesUpdateResponse]:
+    client: Union[AuthenticatedClient, Client],
+    attribute: str,
+    page: Union[Unset, None, int] = UNSET,
+) -> Optional[AttributeValuesGetResult]:
     """
     Args:
-        json_body (List['AttributeUpdate']):
+        attribute (str):
+        page (Union[Unset, None, int]):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        AttributesUpdateResponse
+        AttributeValuesGetResult
     """
 
     return (
         await asyncio_detailed(
             client=client,
-            json_body=json_body,
+            attribute=attribute,
+            page=page,
         )
     ).parsed

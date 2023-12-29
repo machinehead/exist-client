@@ -1,39 +1,29 @@
-from typing import Any, Dict, List, Type, TypeVar, Union, cast
+from typing import Any, Dict, List, Type, TypeVar
 
 from attrs import define as _attrs_define
 from attrs import field as _attrs_field
 
-T = TypeVar("T", bound="AttributesUpdateResponseSuccessItem")
+T = TypeVar("T", bound="AttributeByName")
 
 
 @_attrs_define
-class AttributesUpdateResponseSuccessItem:
+class AttributeByName:
     """
     Attributes:
         name (str):
-        date (str):
-        value (Union[float, int, str]):
     """
 
     name: str
-    date: str
-    value: Union[float, int, str]
     additional_properties: Dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:
         name = self.name
-        date = self.date
-        value: Union[float, int, str]
-
-        value = self.value
 
         field_dict: Dict[str, Any] = {}
         field_dict.update(self.additional_properties)
         field_dict.update(
             {
                 "name": name,
-                "date": date,
-                "value": value,
             }
         )
 
@@ -44,21 +34,12 @@ class AttributesUpdateResponseSuccessItem:
         d = src_dict.copy()
         name = d.pop("name")
 
-        date = d.pop("date")
-
-        def _parse_value(data: object) -> Union[float, int, str]:
-            return cast(Union[float, int, str], data)
-
-        value = _parse_value(d.pop("value"))
-
-        attributes_update_response_success_item = cls(
+        attribute_by_name = cls(
             name=name,
-            date=date,
-            value=value,
         )
 
-        attributes_update_response_success_item.additional_properties = d
-        return attributes_update_response_success_item
+        attribute_by_name.additional_properties = d
+        return attribute_by_name
 
     @property
     def additional_keys(self) -> List[str]:

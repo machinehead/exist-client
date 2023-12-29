@@ -3,27 +3,31 @@ from typing import Any, Dict, List, Type, TypeVar
 from attrs import define as _attrs_define
 from attrs import field as _attrs_field
 
-T = TypeVar("T", bound="AttributeAcquisitionType0")
+T = TypeVar("T", bound="AttributesAcquireResultFailedItem")
 
 
 @_attrs_define
-class AttributeAcquisitionType0:
+class AttributesAcquireResultFailedItem:
     """
     Attributes:
-        template (str):
+        error (str):
+        error_code (str):
     """
 
-    template: str
+    error: str
+    error_code: str
     additional_properties: Dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:
-        template = self.template
+        error = self.error
+        error_code = self.error_code
 
         field_dict: Dict[str, Any] = {}
         field_dict.update(self.additional_properties)
         field_dict.update(
             {
-                "template": template,
+                "error": error,
+                "error_code": error_code,
             }
         )
 
@@ -32,14 +36,17 @@ class AttributeAcquisitionType0:
     @classmethod
     def from_dict(cls: Type[T], src_dict: Dict[str, Any]) -> T:
         d = src_dict.copy()
-        template = d.pop("template")
+        error = d.pop("error")
 
-        attribute_acquisition_type_0 = cls(
-            template=template,
+        error_code = d.pop("error_code")
+
+        attributes_acquire_result_failed_item = cls(
+            error=error,
+            error_code=error_code,
         )
 
-        attribute_acquisition_type_0.additional_properties = d
-        return attribute_acquisition_type_0
+        attributes_acquire_result_failed_item.additional_properties = d
+        return attributes_acquire_result_failed_item
 
     @property
     def additional_keys(self) -> List[str]:
