@@ -10,6 +10,7 @@ packages = [{include = "exist_client", from = "src"}]
 [tool.poetry.dependencies]
 python = "^3.10"
 loguru = "*"
+pytilz = {git = "https://github.com/machinehead/pytilz.git", develop = true}
 
 
 [tool.poetry.group.dev.dependencies]
