@@ -55,6 +55,9 @@ jobs:
         if: steps.cached-venv.outputs.cache-hit != 'true'
         run: poetry install --no-root
 
+      - name: Run mypy
+        run: poetry run mypy
+
       - name: Run tests
         run: poetry run pytest
 
