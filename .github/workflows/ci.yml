@@ -17,6 +17,8 @@ on:
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
+    env:
+      POETRY_VIRTUALENVS_IN_PROJECT: true
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -37,8 +39,6 @@ jobs:
       - name: Install Poetry if not cached
         if: steps.cached-poetry.outputs.cache-hit != 'true'
         uses: snok/install-poetry@v1
-        with:
-          virtualenvs-in-project: true
 
       - name: Install poetry-dynamic-versioning
         if: steps.cached-poetry.outputs.cache-hit != 'true'
@@ -49,11 +49,11 @@ jobs:
         uses: actions/cache@v3
         with:
           path: .venv
-          key: venv-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('poetry.lock') }}
+          key: venv-${{ steps.setup-python.outputs.python-version }}
 
       - name: Install dependencies
-        if: steps.cached-venv.outputs.cache-hit != 'true'
-        run: poetry install --no-root
+        # if: steps.cached-venv.outputs.cache-hit != 'true'
+        run: poetry install --sync
 
       - name: Run mypy
         run: poetry run mypy
