@@ -14,7 +14,7 @@ from .attributes_get_result import AttributesGetResult
 from .attributes_update_result import AttributesUpdateResult
 from .attributes_update_result_failed_item import AttributesUpdateResultFailedItem
 from .date_value import DateValue
-from .error_code import ErrorCode
+from .error_mixin import ErrorMixin
 from .paginated_response import PaginatedResponse
 from .tokens import Tokens
 from .user_profile import UserProfile
@@ -34,7 +34,7 @@ __all__ = (
     "AttributeValue",
     "AttributeValuesGetResult",
     "DateValue",
-    "ErrorCode",
+    "ErrorMixin",
     "PaginatedResponse",
     "Tokens",
     "UserProfile",

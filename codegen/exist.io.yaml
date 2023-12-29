@@ -254,7 +254,8 @@ components:
           type: string
       required:
         - name
-    ErrorCode:
+    # Would've called it Error, but if the class name matches any of the field names, the generated constructor fails mypy
+    ErrorMixin:
       properties:
         error:
           type: string
@@ -277,7 +278,7 @@ components:
           type: array
           items:
             allOf:
-              - $ref: '#/components/schemas/ErrorCode'
+              - $ref: '#/components/schemas/ErrorMixin'
               - oneOf:
                   - $ref: '#/components/schemas/AttributeByTemplate'
                   - $ref: '#/components/schemas/AttributeByName'
@@ -294,7 +295,7 @@ components:
           type: array
           items:
             allOf:
-              - $ref: '#/components/schemas/ErrorCode'
+              - $ref: '#/components/schemas/ErrorMixin'
               - $ref: '#/components/schemas/AttributeValue'
       required:
         - success

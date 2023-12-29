@@ -3,11 +3,11 @@ from typing import Any, Dict, List, Type, TypeVar
 from attrs import define as _attrs_define
 from attrs import field as _attrs_field
 
-T = TypeVar("T", bound="ErrorCode")
+T = TypeVar("T", bound="ErrorMixin")
 
 
 @_attrs_define
-class ErrorCode:
+class ErrorMixin:
     """
     Attributes:
         error (str):
@@ -40,13 +40,13 @@ class ErrorCode:
 
         error_code = d.pop("error_code")
 
-        error_code = cls(
+        error_mixin = cls(
             error=error,
             error_code=error_code,
         )
 
-        error_code.additional_properties = d
-        return error_code
+        error_mixin.additional_properties = d
+        return error_mixin
 
     @property
     def additional_keys(self) -> List[str]:
