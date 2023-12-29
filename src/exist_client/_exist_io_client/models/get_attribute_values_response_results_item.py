@@ -1,33 +1,35 @@
-from typing import Any, Dict, List, Type, TypeVar
+from typing import Any, Dict, List, Type, TypeVar, Union, cast
 
 from attrs import define as _attrs_define
 from attrs import field as _attrs_field
 
-T = TypeVar("T", bound="GetAttributesResponse200ResultsItemGroup")
+T = TypeVar("T", bound="GetAttributeValuesResponseResultsItem")
 
 
 @_attrs_define
-class GetAttributesResponse200ResultsItemGroup:
+class GetAttributeValuesResponseResultsItem:
     """
     Attributes:
-        name (str):
-        label (str):
+        date (str):
+        value (Union[float, int, str]):
     """
 
-    name: str
-    label: str
+    date: str
+    value: Union[float, int, str]
     additional_properties: Dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:
-        name = self.name
-        label = self.label
+        date = self.date
+        value: Union[float, int, str]
+
+        value = self.value
 
         field_dict: Dict[str, Any] = {}
         field_dict.update(self.additional_properties)
         field_dict.update(
             {
-                "name": name,
-                "label": label,
+                "date": date,
+                "value": value,
             }
         )
 
@@ -36,17 +38,20 @@ class GetAttributesResponse200ResultsItemGroup:
     @classmethod
     def from_dict(cls: Type[T], src_dict: Dict[str, Any]) -> T:
         d = src_dict.copy()
-        name = d.pop("name")
+        date = d.pop("date")
 
-        label = d.pop("label")
+        def _parse_value(data: object) -> Union[float, int, str]:
+            return cast(Union[float, int, str], data)
 
-        get_attributes_response_200_results_item_group = cls(
-            name=name,
-            label=label,
+        value = _parse_value(d.pop("value"))
+
+        get_attribute_values_response_results_item = cls(
+            date=date,
+            value=value,
         )
 
-        get_attributes_response_200_results_item_group.additional_properties = d
-        return get_attributes_response_200_results_item_group
+        get_attribute_values_response_results_item.additional_properties = d
+        return get_attribute_values_response_results_item
 
     @property
     def additional_keys(self) -> List[str]:

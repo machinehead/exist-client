@@ -4,28 +4,26 @@ from attrs import define as _attrs_define
 from attrs import field as _attrs_field
 
 if TYPE_CHECKING:
-    from ..models.get_attributes_response_200_results_item_group import (
-        GetAttributesResponse200ResultsItemGroup,
-    )
+    from ..models.attribute_group import AttributeGroup
 
 
-T = TypeVar("T", bound="GetAttributesResponse200ResultsItem")
+T = TypeVar("T", bound="Attribute")
 
 
 @_attrs_define
-class GetAttributesResponse200ResultsItem:
+class Attribute:
     """
     Attributes:
         name (str):
         label (str):
-        group (GetAttributesResponse200ResultsItemGroup):
+        group (AttributeGroup):
         value_type_description (str):
         template (Optional[str]):
     """
 
     name: str
     label: str
-    group: "GetAttributesResponse200ResultsItemGroup"
+    group: "AttributeGroup"
     value_type_description: str
     template: Optional[str]
     additional_properties: Dict[str, Any] = _attrs_field(init=False, factory=dict)
@@ -54,22 +52,20 @@ class GetAttributesResponse200ResultsItem:
 
     @classmethod
     def from_dict(cls: Type[T], src_dict: Dict[str, Any]) -> T:
-        from ..models.get_attributes_response_200_results_item_group import (
-            GetAttributesResponse200ResultsItemGroup,
-        )
+        from ..models.attribute_group import AttributeGroup
 
         d = src_dict.copy()
         name = d.pop("name")
 
         label = d.pop("label")
 
-        group = GetAttributesResponse200ResultsItemGroup.from_dict(d.pop("group"))
+        group = AttributeGroup.from_dict(d.pop("group"))
 
         value_type_description = d.pop("value_type_description")
 
         template = d.pop("template")
 
-        get_attributes_response_200_results_item = cls(
+        attribute = cls(
             name=name,
             label=label,
             group=group,
@@ -77,8 +73,8 @@ class GetAttributesResponse200ResultsItem:
             template=template,
         )
 
-        get_attributes_response_200_results_item.additional_properties = d
-        return get_attributes_response_200_results_item
+        attribute.additional_properties = d
+        return attribute
 
     @property
     def additional_keys(self) -> List[str]:

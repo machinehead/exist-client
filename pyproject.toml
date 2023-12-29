@@ -22,6 +22,7 @@ pre-commit = "*"
 pytest = "*"
 pytest-cov = "*"
 respx = "^0.20.2"
+mypy = "^1.8.0"
 
 
 [build-system]

@@ -135,32 +135,7 @@ paths:
                   results:
                     type: array
                     items:
-                      properties:
-                        template:
-                          type: string
-                          nullable: true
-                        name:
-                          type: string
-                        label:
-                          type: string
-                        group:
-                          type: object
-                          properties:
-                            name:
-                              type: string
-                            label:
-                              type: string
-                          required:
-                            - name
-                            - label
-                        value_type_description:
-                          type: string
-                      required:
-                        - template
-                        - name
-                        - label
-                        - group
-                        - value_type_description
+                      $ref: '#/components/schemas/Attribute'
                 required:
                   - count
                   - next
@@ -168,6 +143,26 @@ paths:
                   - results
       security:
         - http: []
+  /api/2/attributes/values/:
+    get:
+      operationId: get-attribute-values
+      parameters:
+        - name: attribute
+          in: query
+          schema:
+            type: string
+          required: true
+        - name: page
+          in: query
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Successfully retrieved attributes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetAttributeValuesResponse'
   /api/2/accounts/profile/:
     get:
       operationId: get-profile
@@ -182,6 +177,47 @@ paths:
         - http: []
 components:
   schemas:
+    PaginatedResponse:
+      properties:
+        count:
+          type: integer
+        next:
+          type: string
+          nullable: true
+        previous:
+          type: string
+          nullable: true
+      required:
+        - count
+        - next
+        - previous
+    Attribute:
+      properties:
+        template:
+          type: string
+          nullable: true
+        name:
+          type: string
+        label:
+          type: string
+        group:
+          type: object
+          properties:
+            name:
+              type: string
+            label:
+              type: string
+          required:
+            - name
+            - label
+        value_type_description:
+          type: string
+      required:
+        - template
+        - name
+        - label
+        - group
+        - value_type_description
     UserProfile:
       properties:
         timezone:
@@ -189,11 +225,17 @@ components:
       required:
         - timezone
     AttributeAcquisition:
-      properties:
-        template:
-          type: string
-        name:
-          type: string
+      oneOf:
+        - properties:
+            template:
+              type: string
+          required:
+            - template
+        - properties:
+            name:
+              type: string
+          required:
+            - name
     AttributeAcquisitionResponse:
       properties:
         success:
@@ -267,6 +309,8 @@ components:
                 type: string
               error_code:
                 type: string
+              value:
+                type: integer
             required:
               - name
               - date
@@ -294,6 +338,26 @@ components:
         - expires_in
         - scope
         - refresh_token
+    GetAttributeValuesResponse:
+      allOf:
+        - $ref: '#/components/schemas/PaginatedResponse'
+        - properties:
+            results:
+              type: array
+              items:
+                properties:
+                  date:
+                    type: string
+                  value:
+                    anyOf:
+                      - type: string
+                      - type: integer
+                      - type: number
+                required:
+                  - date
+                  - value
+          required:
+            - results
   securitySchemes:
     http:
       type: http

@@ -6,6 +6,6 @@ __pycache__
 coverage.xml
 htmlcov
 
-.pytest_cache
-
 .ruff_cache
+.pytest_cache
+.mypy_cache
