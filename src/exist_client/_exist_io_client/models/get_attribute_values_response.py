@@ -4,26 +4,26 @@ from attrs import define as _attrs_define
 from attrs import field as _attrs_field
 
 if TYPE_CHECKING:
-    from ..models.get_attributes_response_200_results_item import (
-        GetAttributesResponse200ResultsItem,
+    from ..models.get_attribute_values_response_results_item import (
+        GetAttributeValuesResponseResultsItem,
     )
 
 
-T = TypeVar("T", bound="GetAttributesResponse200")
+T = TypeVar("T", bound="GetAttributeValuesResponse")
 
 
 @_attrs_define
-class GetAttributesResponse200:
+class GetAttributeValuesResponse:
     """
     Attributes:
         count (int):
-        results (List['GetAttributesResponse200ResultsItem']):
+        results (List['GetAttributeValuesResponseResultsItem']):
         next_ (Optional[str]):
         previous (Optional[str]):
     """
 
     count: int
-    results: List["GetAttributesResponse200ResultsItem"]
+    results: List["GetAttributeValuesResponseResultsItem"]
     next_: Optional[str]
     previous: Optional[str]
     additional_properties: Dict[str, Any] = _attrs_field(init=False, factory=dict)
@@ -54,8 +54,8 @@ class GetAttributesResponse200:
 
     @classmethod
     def from_dict(cls: Type[T], src_dict: Dict[str, Any]) -> T:
-        from ..models.get_attributes_response_200_results_item import (
-            GetAttributesResponse200ResultsItem,
+        from ..models.get_attribute_values_response_results_item import (
+            GetAttributeValuesResponseResultsItem,
         )
 
         d = src_dict.copy()
@@ -64,7 +64,7 @@ class GetAttributesResponse200:
         results = []
         _results = d.pop("results")
         for results_item_data in _results:
-            results_item = GetAttributesResponse200ResultsItem.from_dict(
+            results_item = GetAttributeValuesResponseResultsItem.from_dict(
                 results_item_data
             )
 
@@ -74,15 +74,15 @@ class GetAttributesResponse200:
 
         previous = d.pop("previous")
 
-        get_attributes_response_200 = cls(
+        get_attribute_values_response = cls(
             count=count,
             results=results,
             next_=next_,
             previous=previous,
         )
 
-        get_attributes_response_200.additional_properties = d
-        return get_attributes_response_200
+        get_attribute_values_response.additional_properties = d
+        return get_attribute_values_response
 
     @property
     def additional_keys(self) -> List[str]:
