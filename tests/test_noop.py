@@ -1,6 +1,2 @@
-def test_noop():
-    assert True
-
-
-def test_pytilz_loaded(pytilz_loaded):
+def test_pytilz_loaded(pytilz_loaded: bool) -> None:
     assert pytilz_loaded
