@@ -49,8 +49,10 @@ jobs:
         uses: actions/cache@v3
         with:
           path: .venv
-          key: venv-${{ steps.setup-python.outputs.python-version }}
-
+          key: venv-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('poetry.lock') }}
+          restore-keys: |
+            venv-${{ steps.setup-python.outputs.python-version }}-
+            venv-
       - name: Install dependencies
         # if: steps.cached-venv.outputs.cache-hit != 'true'
         run: poetry install --sync
