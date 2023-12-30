@@ -12,15 +12,18 @@ class AttributesAcquireResultFailedItem:
     Attributes:
         error (str):
         error_code (str):
+        name (str):
     """
 
     error: str
     error_code: str
+    name: str
     additional_properties: Dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:
         error = self.error
         error_code = self.error_code
+        name = self.name
 
         field_dict: Dict[str, Any] = {}
         field_dict.update(self.additional_properties)
@@ -28,6 +31,7 @@ class AttributesAcquireResultFailedItem:
             {
                 "error": error,
                 "error_code": error_code,
+                "name": name,
             }
         )
 
@@ -40,9 +44,12 @@ class AttributesAcquireResultFailedItem:
 
         error_code = d.pop("error_code")
 
+        name = d.pop("name")
+
         attributes_acquire_result_failed_item = cls(
             error=error,
             error_code=error_code,
+            name=name,
         )
 
         attributes_acquire_result_failed_item.additional_properties = d
