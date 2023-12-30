@@ -1,0 +1,336 @@
+openapi: 3.0.0
+info:
+  title: Exist.io
+  version: "1.0"
+paths:
+  /oauth2/access_token:
+    post:
+      operationId: access-token
+      responses:
+        "200":
+          description: Exchange access code for an access token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tokens'
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              properties:
+                grant_type:
+                  type: string
+                code:
+                  type: string
+                client_id:
+                  type: string
+                client_secret:
+                  type: string
+              required:
+                - grant_type
+                - code
+                - client_id
+                - client_secret
+  /api/2/attributes/acquire/:
+    post:
+      operationId: attributes-acquire
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/AttributeRef'
+      responses:
+        "200":
+          description: Successfully acquired all attributes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AttributesAcquireResult'
+        "202":
+          description: Some attributes failed to be acquired
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AttributesAcquireResult'
+      security:
+        - http: []
+  /api/2/attributes/update/:
+    post:
+      operationId: attributes-update
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/AttributeValue'
+      responses:
+        "200":
+          description: Successfully updated all attributes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AttributesUpdateResult'
+        "202":
+          description: Some attributes failed to be updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AttributesUpdateResult'
+      security:
+        - http: []
+  /api/2/attributes/:
+    get:
+      operationId: attributes-get
+      parameters:
+        - name: owned
+          in: query
+          schema:
+            type: boolean
+        - name: include_low_priority
+          in: query
+          schema:
+            type: boolean
+        - name: include_inactive
+          in: query
+          schema:
+            type: boolean
+        - name: limit
+          in: query
+          schema:
+            type: integer
+        - name: groups
+          in: query
+          schema:
+            type: string
+        - name: attributes
+          in: query
+          schema:
+            type: string
+        - name: manual
+          in: query
+          schema:
+            type: boolean
+        - name: page
+          in: query
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Successfully retrieved attributes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AttributesGetResult'
+      security:
+        - http: []
+  /api/2/attributes/values/:
+    get:
+      operationId: attribute-values-get
+      parameters:
+        - name: attribute
+          in: query
+          schema:
+            type: string
+          required: true
+        - name: page
+          in: query
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Successfully retrieved attributes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AttributeValuesGetResult'
+  /api/2/accounts/profile/:
+    get:
+      operationId: accounts-profile
+      responses:
+        "200":
+          description: Get user's profile
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfile'
+      security:
+        - http: []
+components:
+  schemas:
+    PaginatedResponse:
+      properties:
+        count:
+          type: integer
+        next:
+          type: string
+          nullable: true
+        previous:
+          type: string
+          nullable: true
+      required:
+        - count
+        - next
+        - previous
+    AttributesGetResult:
+      allOf:
+        - $ref: '#/components/schemas/PaginatedResponse'
+        - type: object
+          properties:
+            results:
+              type: array
+              items:
+                $ref: '#/components/schemas/Attribute'
+          required:
+            - results
+    Attribute:
+      properties:
+        template:
+          type: string
+          nullable: true
+        name:
+          type: string
+        label:
+          type: string
+        group:
+          type: object
+          properties:
+            name:
+              type: string
+            label:
+              type: string
+          required:
+            - name
+            - label
+        value_type_description:
+          type: string
+      required:
+        - template
+        - name
+        - label
+        - group
+        - value_type_description
+    DateValue:
+      properties:
+        date:
+          type: string
+        value:
+          anyOf:
+            - type: string
+            - type: integer
+            - type: number
+      required:
+        - date
+        - value
+    AttributeValue:
+      allOf:
+        - $ref: '#/components/schemas/DateValue'
+        - properties:
+            name:
+              type: string
+          required:
+            - name
+    UserProfile:
+      properties:
+        timezone:
+          type: string
+      required:
+        - timezone
+    AttributeRef:
+      oneOf:
+        - $ref: '#/components/schemas/AttributeByTemplate'
+        - $ref: '#/components/schemas/AttributeByName'
+    AttributeByTemplate:
+      properties:
+        template:
+          type: string
+      required:
+        - template
+    AttributeByName:
+      properties:
+        name:
+          type: string
+      required:
+        - name
+    # Would've called it Error, but if the class name matches any of the field names, the generated constructor fails mypy
+    ErrorMixin:
+      properties:
+        error:
+          type: string
+        error_code:
+          type: string
+      required:
+        - error
+        - error_code
+    AttributesAcquireResult:
+      properties:
+        success:
+          type: array
+          items:
+            properties:
+              name:
+                type: string
+            required:
+              - name
+        failed:
+          type: array
+          items:
+            allOf:
+              - $ref: '#/components/schemas/ErrorMixin'
+              # TODO: support '#/components/schemas/AttributeByTemplate'
+              - $ref: '#/components/schemas/AttributeByName'
+      required:
+        - success
+        - failed
+    AttributesUpdateResult:
+      properties:
+        success:
+          type: array
+          items:
+            $ref: '#/components/schemas/AttributeValue'
+        failed:
+          type: array
+          items:
+            allOf:
+              - $ref: '#/components/schemas/ErrorMixin'
+              - $ref: '#/components/schemas/AttributeValue'
+      required:
+        - success
+        - failed
+    Tokens:
+      type: object
+      properties:
+        access_token:
+          type: string
+        token_type:
+          type: string
+        expires_in:
+          type: integer
+        scope:
+          type: string
+        refresh_token:
+          type: string
+      required:
+        - access_token
+        - token_type
+        - expires_in
+        - scope
+        - refresh_token
+    AttributeValuesGetResult:
+      allOf:
+        - $ref: '#/components/schemas/PaginatedResponse'
+        - properties:
+            results:
+              type: array
+              items:
+                $ref: '#/components/schemas/DateValue'
+          required:
+            - results
+  securitySchemes:
+    http:
+      type: http
+      scheme: Bearer
+servers:
+  - url: https://exist.io

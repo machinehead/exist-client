@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "Exist Client"
+name = "exist-client"
 version = "0.1.0"
 description = ""
 authors = ["Ilya Nekhay <nekhayiv@gmail.com>"]
@@ -9,15 +9,27 @@ packages = [{include = "exist_client", from = "src"}]
 
 [tool.poetry.dependencies]
 python = "^3.10"
+attrs = "^23.1.0"
+loguru = "*"
+pytilz = {git = "https://github.com/machinehead/pytilz.git", develop = true}
 
 
 [tool.poetry.group.dev.dependencies]
+# Code generation
+openapi-python-client = "^0.16.1"
+
 # Code management
 pre-commit = "*"
 
 # Testing
 pytest = "*"
 pytest-cov = "*"
+mypy = "*"
+respx = "*"
+flask = "^3.0.0"
+flask-httpauth = "^4.8.0"
+flask-httpauth-stubs = "^0.1.6"
+syrupy = "^4.6.0"
 
 
 [build-system]
@@ -27,3 +39,14 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.pytest.ini_options]
 addopts = "--cov=src --cov-report html --cov-report xml --cov-config=.coveragerc"
+pythonpath = ["src"]
+testpaths = ["tests"]
+
+
+[tool.isort]
+profile = "black"
+
+
+[tool.ruff]
+select = ["F", "I"]
+line-length = 120
