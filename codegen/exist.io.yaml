@@ -279,9 +279,8 @@ components:
           items:
             allOf:
               - $ref: '#/components/schemas/ErrorMixin'
-              - oneOf:
-                  - $ref: '#/components/schemas/AttributeByTemplate'
-                  - $ref: '#/components/schemas/AttributeByName'
+              # TODO: support '#/components/schemas/AttributeByTemplate'
+              - $ref: '#/components/schemas/AttributeByName'
       required:
         - success
         - failed

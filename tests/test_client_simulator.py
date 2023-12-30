@@ -13,7 +13,11 @@ from exist_client import ExistClient
 from exist_client._exist_io_client.errors import UnexpectedStatus
 from exist_client._exist_io_client.models import (
     Attribute,
+    AttributeByName,
     AttributeGroup,
+    AttributesAcquireResult,
+    AttributesAcquireResultFailedItem,
+    AttributesAcquireResultSuccessItem,
     AttributesGetResult,
     AttributesUpdateResult,
     AttributesUpdateResultFailedItem,
@@ -63,15 +67,29 @@ def test_update_attributes(
 ) -> None:
     client = ExistClient(token=token)
     with expectation:
-        assert (
-            client.update_attributes(
-                updates=[
-                    AttributeValue(name="myair_score", date="2023-12-29", value=57),
-                    AttributeValue(name="nonexistent", date="2023-12-29", value=480),
-                ]
-            )
-            == snapshot
+        assert client.update_attributes(
+            updates=[
+                AttributeValue(name="nonexistent", date="2023-12-29", value=480),
+            ]
+        ) == snapshot(name="nonexistent")
+        myair_score_update = AttributeValue(
+            name="myair_score", date="2023-12-29", value=57
         )
+        assert client.update_attributes(
+            updates=[
+                myair_score_update,
+            ]
+        ) == snapshot(name="unauthorised")
+        assert (
+            client.acquire_attributes(
+                acquisitions=[AttributeByName(name="myair_score")]
+            )
+        ) == snapshot(name="acquire_myair_score")
+        assert client.update_attributes(
+            updates=[
+                myair_score_update,
+            ]
+        ) == snapshot(name="retry_myair_score")
 
 
 @pytest.fixture
@@ -156,8 +174,57 @@ def exist_api_simulator() -> Generator[MockRouter, None, None]:
                     )
                 )
             else:
+                # TODO: data validation
+                #  'value_type': 5, 'value_type_description': 'Percentage':
+                #    AttributesUpdateResultFailedItem(
+                #       error='Value must be a float between 0 and 1',
+                #       error_code='validation',
+                #       date='2023-12-29',
+                #       value=57,
+                #       name='myair_score',
+                #       additional_properties={}
+                #    )
                 success.append(value)
         return AttributesUpdateResult(success=success, failed=failed).to_dict()
+
+    @app.post("/api/2/attributes/acquire/")
+    @auth.login_required
+    def acquire_attributes() -> dict[str, Any]:
+        request_json = request.json
+        assert request_json is not None
+        success = []
+        failed = []
+        for item in request_json:
+            # TODO: support AttributeByTemplate, currently only AttributeByName is supported
+            attribute = AttributeByName.from_dict(item)
+            owned = attribute_owned.get(attribute.name)
+            if owned is None:
+                failed.append(
+                    AttributesAcquireResultFailedItem(
+                        error="Attribute matching query does not exist.",
+                        error_code="not_found",
+                        **attribute.to_dict(),
+                    )
+                )
+            # TODO: support groups the client doesn't have access to, e.g.:
+            #  AttributesAcquireResultFailedItem(
+            #    error="No permission to write to attributes in group 'activity'",
+            #    error_code='not_allowed',
+            #    name='steps',
+            #    additional_properties={}
+            #  )
+            else:
+                # Doesn't matter owned or not owned, same response
+                attribute_owned[attribute.name] = True
+                success.append(
+                    AttributesAcquireResultSuccessItem(
+                        **attribute.to_dict(),
+                    )
+                )
+        return AttributesAcquireResult(
+            success=success,
+            failed=failed,
+        ).to_dict()
 
     with respx.mock(base_url=EXIST_IO_BASE_URL) as respx_mock:
         respx_mock.route().mock(side_effect=WSGIHandler(app))
