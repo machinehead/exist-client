@@ -18,6 +18,7 @@ pre-commit = "*"
 # Testing
 pytest = "*"
 pytest-cov = "*"
+commitizen = "^3.13.0"
 
 
 [build-system]
