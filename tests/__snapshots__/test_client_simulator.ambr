@@ -1,0 +1,19 @@
+# serializer version: 1
+# name: test_get_attributes[known-token-expectation0]
+  list([
+    Attribute(name='sleep', label='Time asleep', group=AttributeGroup(name='sleep', label='Sleep', additional_properties={}), value_type_description='Period (min)', template='sleep', additional_properties={}),
+    Attribute(name='myair_score', label='myAir score', group=AttributeGroup(name='sleep', label='Sleep', additional_properties={}), value_type_description='Percentage', template=None, additional_properties={}),
+  ])
+# ---
+# name: test_update_attributes[known-token-expectation0][acquire_myair_score]
+  AttributesAcquireResult(success=[AttributesAcquireResultSuccessItem(name='myair_score', additional_properties={})], failed=[], additional_properties={})
+# ---
+# name: test_update_attributes[known-token-expectation0][nonexistent]
+  AttributesUpdateResult(success=[], failed=[AttributesUpdateResultFailedItem(error="User doesn't have an attribute named 'nonexistent'", error_code='not_found', date='2023-12-29', value=480, name='nonexistent', additional_properties={})], additional_properties={})
+# ---
+# name: test_update_attributes[known-token-expectation0][retry_myair_score]
+  AttributesUpdateResult(success=[AttributeValue(date='2023-12-29', value=57, name='myair_score', additional_properties={})], failed=[], additional_properties={})
+# ---
+# name: test_update_attributes[known-token-expectation0][unauthorised]
+  AttributesUpdateResult(success=[], failed=[AttributesUpdateResultFailedItem(error="Attribute 'myair_score' does not belong to this service", error_code='unauthorised', date='2023-12-29', value=57, name='myair_score', additional_properties={})], additional_properties={})
+# ---

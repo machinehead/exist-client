@@ -9,22 +9,69 @@ packages = [{include = "exist_client", from = "src"}]
 
 [tool.poetry.dependencies]
 python = "^3.10"
+attrs = "^23.1.0"
+loguru = "*"
+pytilz = {git = "https://github.com/machinehead/pytilz.git", develop = true}
 
 
 [tool.poetry.group.dev.dependencies]
+# Code generation
+openapi-python-client = "^0.16.1"
+
 # Code management
 pre-commit = "*"
+commitizen = "*"
 
 # Testing
 pytest = "*"
 pytest-cov = "*"
-commitizen = "^3.13.0"
+mypy = "*"
+respx = "*"
+flask = "^3.0.0"
+flask-httpauth = "^4.8.0"
+flask-httpauth-stubs = "^0.1.6"
+syrupy = "^4.6.0"
 
 
 [build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+requires = ["poetry-core", "poetry-dynamic-versioning"]
+build-backend = "poetry_dynamic_versioning.backend"
 
 
 [tool.pytest.ini_options]
 addopts = "--cov=src --cov-report html --cov-report xml --cov-config=.coveragerc"
+pythonpath = ["src"]
+testpaths = ["tests"]
+
+
+[tool.isort]
+profile = "black"
+
+
+[tool.ruff]
+select = ["F", "I"]
+line-length = 120
+
+
+[tool.commitizen]
+name = "cz_conventional_commits"
+tag_format = "v$version"
+version_type = "pep440"
+version_provider = "poetry"
+update_changelog_on_bump = true
+major_version_zero = true
+
+
+[tool.poetry-dynamic-versioning]
+enable = true
+# TODO: extract version from `cz bump` so that when there's a MINOR/MAJOR change coming, the dev version corresponds
+#  to the next MINOR/MAJOR version
+format-jinja = """
+    {%- if distance == 0 -%}
+        {{ serialize_pep440(base, stage, revision) }}
+    {%- elif revision is not none -%}
+        {{ serialize_pep440(base, stage, revision + 1, dev=distance) }}
+    {%- else -%}
+        {{ serialize_pep440(bump_version(base), stage, revision, dev=distance) }}
+    {%- endif -%}
+"""
