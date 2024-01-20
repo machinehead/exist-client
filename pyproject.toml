@@ -11,7 +11,7 @@ packages = [{include = "exist_client", from = "src"}]
 python = "^3.10"
 attrs = "^23.1.0"
 loguru = "*"
-pytilz = {git = "https://github.com/machinehead/pytilz.git", develop = true}
+pytilz = "^0.1.0"
 
 
 [tool.poetry.group.dev.dependencies]
