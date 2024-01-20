@@ -34,8 +34,8 @@ syrupy = "^4.6.0"
 
 
 [build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+requires = ["poetry-core", "poetry-dynamic-versioning"]
+build-backend = "poetry_dynamic_versioning.backend"
 
 
 [tool.pytest.ini_options]
@@ -51,3 +51,27 @@ profile = "black"
 [tool.ruff]
 select = ["F", "I"]
 line-length = 120
+
+
+[tool.commitizen]
+name = "cz_conventional_commits"
+tag_format = "v$version"
+version_type = "pep440"
+version_provider = "poetry"
+update_changelog_on_bump = true
+major_version_zero = true
+
+
+[tool.poetry-dynamic-versioning]
+enable = true
+# TODO: extract version from `cz bump` so that when there's a MINOR/MAJOR change coming, the dev version corresponds
+#  to the next MINOR/MAJOR version
+format-jinja = """
+    {%- if distance == 0 -%}
+        {{ serialize_pep440(base, stage, revision) }}
+    {%- elif revision is not none -%}
+        {{ serialize_pep440(base, stage, revision + 1, dev=distance) }}
+    {%- else -%}
+        {{ serialize_pep440(bump_version(base), stage, revision, dev=distance) }}
+    {%- endif -%}
+"""
