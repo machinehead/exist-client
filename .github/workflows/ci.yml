@@ -67,3 +67,10 @@ jobs:
 
       - name: Build package
         run: poetry build
+
+      - name: 'Upload Build'
+        uses: actions/upload-artifact@v3
+        with:
+          name: dist
+          path: dist
+          retention-days: 3
