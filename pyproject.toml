@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "Exist Client"
+name = "exist-client"
 version = "0.1.0"
 description = ""
 authors = ["Ilya Nekhay <nekhayiv@gmail.com>"]
