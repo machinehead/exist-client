@@ -1,3 +1,11 @@
+## v0.2.0 (2024-05-10)
+
+### Feat
+
+- **ExistClient**: allow setting a custom base_url
+
+## v0.1.1 (2024-01-20)
+
 ## v0.1.0 (2024-01-20)
 
 ### Feat
