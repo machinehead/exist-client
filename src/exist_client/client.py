@@ -35,9 +35,9 @@ PaginatedApi = Callable[..., Optional[PaginatedResponse[T]]]
 
 
 class ExistClient:
-    def __init__(self, *, token: str):
+    def __init__(self, *, token: str, base_url: str = EXIST_IO_BASE_URL):
         self.client = AuthenticatedClient(
-            EXIST_IO_BASE_URL,
+            base_url,
             token,
             raise_on_unexpected_status=True,
             follow_redirects=True,
