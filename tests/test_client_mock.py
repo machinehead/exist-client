@@ -2,8 +2,25 @@ import httpx
 from respx import MockRouter
 
 from exist_client import ExistClient
-from exist_client._exist_io_client.models import AttributeByName
-from exist_client.models import AttributeValue
+from exist_client.models import AttributeByName, AttributeValue, Tokens
+
+
+def test_access_token(exist_api_mock: MockRouter) -> None:
+    exist_api_mock.post("/oauth2/access_token").return_value = httpx.Response(
+        200,
+        json=Tokens(
+            access_token="access_token",
+            token_type="token_type",
+            expires_in=3600,
+            refresh_token="refresh_token",
+            scope="scope",
+        ).to_dict(),
+    )
+    ExistClient.get_tokens(
+        code="code",
+        client_id="client_id",
+        client_secret="client_secret",
+    )
 
 
 def test_get_profile(exist_api_mock: MockRouter) -> None:
