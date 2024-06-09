@@ -1,3 +1,9 @@
+## v0.3.0 (2024-06-09)
+
+### Feat
+
+- **ExistClient**: add a method to get Exist tokens
+
 ## v0.2.0 (2024-05-10)
 
 ### Feat
