@@ -1,8 +1,9 @@
 import itertools
 from typing import Any, Callable, Iterable, Optional, Protocol, TypeVar
 
-from ._exist_io_client import AuthenticatedClient
+from ._exist_io_client import AuthenticatedClient, Client
 from ._exist_io_client.api.default import (
+    access_token,
     accounts_profile,
     attribute_values_get,
     attributes_acquire,
@@ -12,11 +13,13 @@ from ._exist_io_client.api.default import (
 
 # TODO: move to .models
 from ._exist_io_client.models import (
+    AccessTokenData,
     AttributeByName,
     AttributeByTemplate,
     AttributesAcquireResult,
     AttributesUpdateResult,
     DateValue,
+    Tokens,
     UserProfile,
 )
 from .models import Attribute, AttributeValue
@@ -41,6 +44,25 @@ class ExistClient:
             token,
             raise_on_unexpected_status=True,
             follow_redirects=True,
+        )
+
+    @staticmethod
+    def get_tokens(
+        *,
+        code: str,
+        client_id: str,
+        client_secret: str,
+        base_url: str = EXIST_IO_BASE_URL,
+    ) -> Tokens:
+        client = Client(base_url)
+        return access_token.sync(
+            client=client,
+            form_data=AccessTokenData(
+                grant_type="authorization_code",
+                code=code,
+                client_id=client_id,
+                client_secret=client_secret,
+            ),
         )
 
     def get_profile(self) -> Optional[UserProfile]:
@@ -89,4 +111,5 @@ class ExistClient:
     def update_attributes(
         self, *, updates: list[AttributeValue]
     ) -> Optional[AttributesUpdateResult]:
+        # TODO: verify that the updates actually happened, and maybe return something other than AttributeValue
         return attributes_update.sync(client=self.client, json_body=updates)
