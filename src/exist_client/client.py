@@ -14,15 +14,13 @@ from ._exist_io_client.api.default import (
 # TODO: move to .models
 from ._exist_io_client.models import (
     AccessTokenData,
-    AttributeByName,
     AttributeByTemplate,
     AttributesAcquireResult,
     AttributesUpdateResult,
     DateValue,
-    Tokens,
     UserProfile,
 )
-from .models import Attribute, AttributeValue
+from .models import Attribute, AttributeByName, AttributeValue, Tokens
 
 EXIST_IO_BASE_URL = "https://exist.io"
 
@@ -53,7 +51,7 @@ class ExistClient:
         client_id: str,
         client_secret: str,
         base_url: str = EXIST_IO_BASE_URL,
-    ) -> Tokens:
+    ) -> Optional[Tokens]:
         client = Client(base_url)
         return access_token.sync(
             client=client,
