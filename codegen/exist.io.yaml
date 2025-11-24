@@ -8,7 +8,7 @@ paths:
       operationId: access-token
       responses:
         "200":
-          description: Exchange access code for an access token
+          description: Exchange access code for an access token or refresh an existing token
           content:
             application/json:
               schema:
@@ -20,15 +20,22 @@ paths:
               properties:
                 grant_type:
                   type: string
+                  description: Either 'authorization_code' or 'refresh_token'
                 code:
                   type: string
+                  description: Required when grant_type is 'authorization_code'
+                redirect_uri:
+                  type: string
+                  description: Required when grant_type is 'authorization_code'
+                refresh_token:
+                  type: string
+                  description: Required when grant_type is 'refresh_token'
                 client_id:
                   type: string
                 client_secret:
                   type: string
               required:
                 - grant_type
-                - code
                 - client_id
                 - client_secret
   /api/2/attributes/acquire/:

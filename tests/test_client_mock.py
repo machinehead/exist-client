@@ -23,6 +23,27 @@ def test_access_token(exist_api_mock: MockRouter) -> None:
     )
 
 
+def test_refresh_token(exist_api_mock: MockRouter) -> None:
+    exist_api_mock.post("/oauth2/access_token").return_value = httpx.Response(
+        200,
+        json=Tokens(
+            access_token="new_access_token",
+            token_type="Bearer",
+            expires_in=3600,
+            refresh_token="new_refresh_token",
+            scope="read+write",
+        ).to_dict(),
+    )
+    tokens = ExistClient.refresh_tokens(
+        refresh_token="old_refresh_token",
+        client_id="client_id",
+        client_secret="client_secret",
+    )
+    assert tokens is not None
+    assert tokens.access_token == "new_access_token"
+    assert tokens.refresh_token == "new_refresh_token"
+
+
 def test_get_profile(exist_api_mock: MockRouter) -> None:
     client = ExistClient(token="token")
     exist_api_mock.get("/api/2/accounts/profile/").return_value = httpx.Response(
