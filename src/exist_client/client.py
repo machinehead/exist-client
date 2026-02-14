@@ -63,6 +63,36 @@ class ExistClient:
             ),
         )
 
+    @staticmethod
+    def refresh_tokens(
+        *,
+        refresh_token: str,
+        client_id: str,
+        client_secret: str,
+        base_url: str = EXIST_IO_BASE_URL,
+    ) -> Optional[Tokens]:
+        """Refresh an expired access token using a refresh token.
+
+        Args:
+            refresh_token: The refresh token from a previous OAuth token response
+            client_id: OAuth client ID
+            client_secret: OAuth client secret
+            base_url: Base URL for the Exist.io API
+
+        Returns:
+            New Tokens object with fresh access_token and refresh_token
+        """
+        client = Client(base_url)
+        return access_token.sync(
+            client=client,
+            form_data=AccessTokenData(
+                grant_type="refresh_token",
+                refresh_token=refresh_token,
+                client_id=client_id,
+                client_secret=client_secret,
+            ),
+        )
+
     def get_profile(self) -> Optional[UserProfile]:
         return accounts_profile.sync(client=self.client)
 
