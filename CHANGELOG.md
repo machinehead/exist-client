@@ -1,3 +1,9 @@
+## v0.4.0 (2026-02-14)
+
+### Feat
+
+- **ExistClient**: add refresh_tokens method
+
 ## v0.3.0 (2024-06-09)
 
 ### Feat
